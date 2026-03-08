@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>11.5 Emporium — Birdie Board · Cobblestone Creek CC</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1b3a28">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Birdie Board">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Cormorant+Garamond:wght@400;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green-deep:#1b3a28; --green-mid:#245c38; --green-light:#2e7a4a;
+  --green-pale:#eaf3ed; --green-tint:#f2f8f4;
+  --gold:#b8943f; --gold-light:#d4af5a; --gold-pale:#fdf6e3; --gold-bright:#f0c040;
+  --cream:#faf8f3; --white:#ffffff;
+  --text-dark:#1a2e22; --text-mid:#3d5c47; --text-light:#6b8c76;
+  --border:#d6e4da; --border-light:#eaf0ec;
+  --shadow:rgba(27,58,40,0.10); --shadow-md:rgba(27,58,40,0.16);
+  --ace:#c0392b; --ace-pale:#fdf0ee;
+  --eagle:#1a5c8a; --eagle-pale:#edf4fb;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Source Sans 3',sans-serif;background:var(--cream);color:var(--text-dark);min-height:100vh;font-size:15px;line-height:1.5;}
+
+/* GOLD BAND */
+.gold-band{height:4px;background:linear-gradient(90deg,var(--green-deep) 0%,var(--gold) 20%,var(--gold-bright) 50%,var(--gold) 80%,var(--green-deep) 100%);}
+
+/* HEADER */
+header{background:var(--green-deep);position:sticky;top:0;z-index:200;box-shadow:0 3px 20px var(--shadow-md);}
+.header-inner{max-width:1180px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;min-height:76px;}
+.logo-block{display:flex;align-items:center;gap:14px;padding:10px 0;text-decoration:none;}
+.logo-emblem{width:52px;height:52px;flex-shrink:0;}
+.logo-emblem svg{width:100%;height:100%;}
+.logo-name{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;letter-spacing:1px;color:var(--gold-light);line-height:1;}
+.logo-name em{font-style:italic;color:var(--gold-bright);}
+.logo-tagline{font-size:0.58rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-top:1px;}
+.logo-club{font-size:0.65rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.48);display:flex;align-items:center;gap:5px;margin-top:1px;}
+.logo-club::before,.logo-club::after{content:'';display:block;width:14px;height:1px;background:var(--gold);opacity:0.45;}
+.season-chip{background:rgba(184,148,63,0.18);border:1px solid rgba(184,148,63,0.3);border-radius:20px;padding:2px 9px;font-size:0.6rem;font-weight:700;letter-spacing:1px;color:var(--gold-light);margin-left:6px;vertical-align:middle;}
+
+/* NAV */
+nav{display:flex;align-items:center;gap:3px;flex-wrap:wrap;}
+.nb{background:none;border:1px solid transparent;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-size:0.76rem;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:rgba(255,255,255,0.55);padding:7px 12px;border-radius:4px;transition:all 0.18s;}
+.nb:hover{color:var(--gold-light);background:rgba(255,255,255,0.06);}
+.nb.active{color:var(--gold-light);border-color:rgba(184,148,63,0.4);background:rgba(184,148,63,0.12);}
+.nb-post{color:var(--green-deep)!important;background:var(--gold)!important;border-color:var(--gold)!important;font-weight:700!important;box-shadow:0 2px 8px rgba(184,148,63,0.3);}
+.nb-post:hover{background:var(--gold-light)!important;}
+.nb-admin{border-color:rgba(255,255,255,0.2)!important;color:rgba(255,255,255,0.7)!important;}
+.nb-admin:hover{color:#fff!important;border-color:rgba(255,255,255,0.45)!important;}
+.session-bar{display:flex;align-items:center;gap:8px;}
+.pill-name{background:rgba(184,148,63,0.18);border:1px solid rgba(184,148,63,0.35);border-radius:20px;padding:4px 13px;font-size:0.76rem;font-weight:600;color:var(--gold-light);}
+.sign-out-btn{background:none;border:1px solid rgba(255,255,255,0.18);color:rgba(255,255,255,0.48);font-family:'Source Sans 3',sans-serif;font-size:0.7rem;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:4px;cursor:pointer;transition:all 0.18s;}
+.sign-out-btn:hover{color:#fff;border-color:rgba(255,255,255,0.4);}
+
+/* MAIN */
+main{max-width:1180px;margin:0 auto;padding:32px 24px;}
+.tab{display:none;}
+.tab.active{display:block;animation:fadeUp 0.26s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.page-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--green-deep);margin-bottom:4px;}
+.page-sub{font-size:0.87rem;color:var(--text-light);margin-bottom:26px;}
+
+/* SIGN-IN PROMPT (shown when not logged in on post tab) */
+.signin-prompt{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:40px;text-align:center;box-shadow:0 2px 8px var(--shadow);margin-bottom:28px;}
+.signin-prompt .sp-icon{font-size:3rem;margin-bottom:14px;}
+.signin-prompt h3{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--green-deep);margin-bottom:8px;}
+.signin-prompt p{font-size:0.88rem;color:var(--text-light);margin-bottom:22px;max-width:380px;margin-left:auto;margin-right:auto;}
+.signin-prompt .sp-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+
+/* STAT CARDS */
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:13px;margin-bottom:28px;}
+.stat-card{background:var(--white);border-radius:10px;padding:18px 20px;border:1px solid var(--border);box-shadow:0 2px 8px var(--shadow);position:relative;overflow:hidden;}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gold);}
+.stat-card.ace-card::before{background:var(--ace);}
+.stat-card.eagle-card::before{background:var(--eagle);}
+.sc-label{font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--text-light);margin-bottom:5px;}
+.sc-val{font-family:'Playfair Display',serif;font-size:2.1rem;font-weight:700;color:var(--green-deep);line-height:1;}
+.sc-val.eagle-val{color:var(--eagle);} .sc-val.ace-val{color:var(--ace);}
+.sc-sub{font-size:0.74rem;color:var(--text-light);margin-top:3px;}
+
+/* SECTION HEADER */
+.sec-hd{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.sec-hd-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--green-deep);white-space:nowrap;}
+.sec-hd-line{flex:1;height:1px;background:var(--border);}
+.sec-hd-note{font-size:0.74rem;color:var(--text-light);white-space:nowrap;}
+
+/* LEGEND */
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;}
+.lg-item{display:flex;align-items:center;gap:6px;font-size:0.77rem;color:var(--text-mid);}
+.lg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.lg-ace{background:var(--ace);} .lg-eagle{background:var(--eagle);} .lg-birdie{background:var(--green-mid);} .lg-un{background:var(--border);}
+
+/* HOLE GRID */
+.hole-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px;margin-bottom:36px;}
+.hole-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:13px 10px;text-align:center;box-shadow:0 1px 4px var(--shadow);transition:transform 0.15s,box-shadow 0.15s;position:relative;overflow:hidden;}
+.hole-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px var(--shadow-md);}
+.hole-card.h-birdie{border-top:3px solid var(--green-mid);background:var(--green-tint);}
+.hole-card.h-eagle{border-top:3px solid var(--eagle);background:var(--eagle-pale);}
+.hole-card.h-ace{border-top:3px solid var(--ace);background:var(--ace-pale);}
+.hole-card.h-un{border-top:3px solid var(--border);}
+.hc-lbl{font-size:0.56rem;letter-spacing:3px;text-transform:uppercase;color:var(--text-light);}
+.hc-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--green-deep);line-height:1;margin:2px 0;}
+.hole-card.h-eagle .hc-num{color:var(--eagle);} .hole-card.h-ace .hc-num{color:var(--ace);}
+.hc-par{font-size:0.63rem;color:var(--text-light);margin-bottom:8px;}
+.score-badge{display:inline-block;font-size:0.66rem;font-weight:700;letter-spacing:0.5px;border-radius:20px;padding:3px 9px;}
+.sb-birdie{background:var(--green-pale);color:var(--green-mid);border:1px solid rgba(36,92,56,0.25);}
+.sb-eagle{background:var(--eagle-pale);color:var(--eagle);border:1px solid rgba(26,92,138,0.25);}
+.sb-ace{background:var(--ace-pale);color:var(--ace);border:1px solid rgba(192,57,43,0.25);}
+.sb-un{background:var(--green-pale);color:var(--text-light);border:1px solid var(--border);}
+.hc-claimer{font-size:0.7rem;font-weight:700;color:var(--text-mid);margin-top:4px;}
+.hc-date{font-size:0.6rem;color:var(--text-light);margin-top:2px;}
+
+/* POST SCORE FORM */
+.post-form-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:30px;box-shadow:0 2px 8px var(--shadow);margin-bottom:32px;}
+.post-form-card h2{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--green-deep);margin-bottom:4px;}
+.post-form-card .pfc-sub{font-size:0.84rem;color:var(--text-light);margin-bottom:22px;}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;}
+.fg{display:flex;flex-direction:column;gap:5px;}
+.fg.full{grid-column:1/-1;}
+.f-lbl{font-size:0.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-mid);}
+input[type=text],input[type=password],input[type=number],input[type=date],select{
+  background:var(--cream);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 13px;font-family:'Source Sans 3',sans-serif;font-size:0.9rem;
+  color:var(--text-dark);transition:border-color 0.18s,background 0.18s;width:100%;}
+input:focus,select:focus{outline:none;border-color:var(--green-mid);background:var(--white);}
+select option{background:var(--white);}
+
+/* SCORE TYPE SELECTOR */
+.stype-row{display:flex;gap:8px;}
+.stype{flex:1;padding:10px 6px;border-radius:8px;border:1.5px solid var(--border);background:var(--cream);color:var(--text-mid);font-family:'Source Sans 3',sans-serif;font-size:0.82rem;font-weight:700;letter-spacing:0.5px;cursor:pointer;transition:all 0.18s;text-align:center;}
+.stype:hover{border-color:var(--green-mid);color:var(--green-mid);}
+.stype.sel-b{border-color:var(--green-mid);background:var(--green-pale);color:var(--green-mid);}
+.stype.sel-e{border-color:var(--eagle);background:var(--eagle-pale);color:var(--eagle);}
+.stype.sel-a{border-color:var(--ace);background:var(--ace-pale);color:var(--ace);}
+
+/* BUTTONS */
+.btn-primary{background:var(--green-mid);color:var(--white);border:none;border-radius:8px;padding:11px 26px;font-family:'Source Sans 3',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.18s;box-shadow:0 2px 8px rgba(36,92,56,0.2);margin-top:16px;}
+.btn-primary:hover{background:var(--green-deep);}
+.btn-gold{background:var(--gold);color:var(--green-deep);border:none;border-radius:8px;padding:11px 26px;font-family:'Source Sans 3',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.18s;margin-top:16px;}
+.btn-gold:hover{background:var(--gold-light);}
+.btn-outline{background:none;border:1.5px solid var(--border);color:var(--text-mid);border-radius:8px;padding:10px 22px;font-family:'Source Sans 3',sans-serif;font-size:0.85rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.18s;margin-top:16px;}
+.btn-outline:hover{border-color:var(--green-mid);color:var(--green-mid);}
+.btn-danger{background:none;border:1.5px solid rgba(192,57,43,0.35);color:var(--ace);border-radius:8px;padding:10px 22px;font-family:'Source Sans 3',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;transition:all 0.18s;margin-top:16px;}
+.btn-danger:hover{background:var(--ace-pale);}
+
+/* ALERTS */
+.alert{padding:11px 15px;border-radius:8px;font-size:0.85rem;margin-top:13px;display:none;}
+.alert-ok{background:var(--green-pale);border:1px solid rgba(36,92,56,0.2);color:var(--green-mid);}
+.alert-err{background:var(--ace-pale);border:1px solid rgba(192,57,43,0.2);color:var(--ace);}
+.alert-warn{background:var(--gold-pale);border:1px solid rgba(184,148,63,0.25);color:#7a6020;}
+
+/* FEED */
+.feed{display:flex;flex-direction:column;gap:8px;}
+.feed-item{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;background:var(--white);border:1px solid var(--border-light);border-radius:9px;padding:12px 15px;box-shadow:0 1px 4px var(--shadow);transition:background 0.12s;}
+.feed-item:hover{background:var(--green-tint);}
+.fi-body{display:flex;flex-direction:column;gap:2px;flex:1;}
+.fi-player{font-weight:700;color:var(--green-deep);font-size:0.9rem;}
+.fi-detail{font-size:0.77rem;color:var(--text-mid);}
+.fi-witness{font-size:0.72rem;color:var(--text-light);font-style:italic;}
+.fi-notes{font-size:0.72rem;color:var(--text-light);}
+.feed-empty{color:var(--text-light);font-size:0.85rem;padding:16px;text-align:center;background:var(--white);border-radius:9px;border:1px dashed var(--border);}
+
+/* WALL OF FAME */
+.wof-intro{background:linear-gradient(135deg,var(--green-deep),#2d5a3d);border-radius:14px;padding:28px 32px;margin-bottom:28px;display:flex;align-items:center;gap:24px;box-shadow:0 4px 20px var(--shadow-md);position:relative;overflow:hidden;}
+.wof-intro::before{content:'';position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(184,148,63,0.14),transparent 70%);}
+.wof-intro-icon{font-size:3rem;flex-shrink:0;}
+.wof-intro-text h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:var(--gold-light);margin-bottom:5px;}
+.wof-intro-text p{font-size:0.86rem;color:rgba(255,255,255,0.58);line-height:1.6;max-width:520px;}
+.wof-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px;margin-bottom:8px;}
+.wof-card{background:linear-gradient(135deg,var(--green-deep),#2d5a3d);border-radius:12px;padding:24px;position:relative;overflow:hidden;box-shadow:0 4px 18px var(--shadow-md);transition:all 0.2s;}
+.wof-card:hover{transform:translateY(-2px);}
+.wof-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-bright),var(--gold));}
+.wof-trophy{font-size:1.8rem;margin-bottom:8px;}
+.wof-label{font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:3px;}
+.wof-name{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:var(--gold-light);margin-bottom:4px;}
+.wof-detail{font-size:0.76rem;color:rgba(255,255,255,0.45);line-height:1.5;}
+.wof-badge-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px;}
+.wof-badge{background:rgba(184,148,63,0.18);border:1px solid rgba(184,148,63,0.32);border-radius:20px;padding:3px 9px;font-size:0.67rem;font-weight:700;color:var(--gold-light);}
+.wof-empty-champ{grid-column:1/-1;background:var(--white);border:2px dashed var(--border);border-radius:12px;padding:36px;text-align:center;color:var(--text-light);}
+.wof-empty-champ .wec-icon{font-size:2.2rem;margin-bottom:8px;}
+.wof-empty-champ p{font-size:0.86rem;line-height:1.6;max-width:380px;margin:0 auto;}
+.wof-progress-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:11px;margin-bottom:28px;}
+.wof-prog-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:13px 16px;box-shadow:0 1px 4px var(--shadow);}
+.wof-prog-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.wof-prog-name{font-weight:700;color:var(--green-deep);font-size:0.9rem;}
+.wof-prog-count{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--gold);}
+.wof-prog-bar-bg{background:var(--green-pale);border-radius:20px;height:7px;overflow:hidden;}
+.wof-prog-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--green-mid),var(--gold));}
+.wof-prog-holes{margin-top:5px;display:flex;gap:3px;flex-wrap:wrap;}
+.pip{width:17px;height:17px;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-size:0.58rem;font-weight:700;}
+.pip-done{background:var(--green-pale);color:var(--green-mid);border:1px solid rgba(36,92,56,0.2);}
+.pip-todo{background:var(--border-light);color:var(--text-light);border:1px solid var(--border);}
+
+/* STANDINGS */
+.tbl-wrap{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 2px 8px var(--shadow);margin-bottom:32px;}
+table{width:100%;border-collapse:collapse;}
+thead{background:var(--green-deep);}
+thead th{font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.72);padding:12px 16px;text-align:left;font-weight:600;}
+tbody tr{border-bottom:1px solid var(--border-light);transition:background 0.12s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:var(--green-tint);}
+td{padding:12px 16px;font-size:0.88rem;color:var(--text-dark);vertical-align:middle;}
+.rank-td{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:var(--text-light);width:44px;}
+.rank-td.r1{color:var(--gold);} .rank-td.r2{color:#9e9e9e;} .rank-td.r3{color:#b07040;}
+.pn{font-weight:700;color:var(--green-deep);}
+.si{display:inline-flex;align-items:center;gap:4px;font-weight:700;font-size:0.84rem;}
+.si-b{color:var(--green-mid);} .si-e{color:var(--eagle);} .si-a{color:var(--ace);}
+.cp{font-size:0.71rem;font-weight:700;padding:3px 9px;border-radius:20px;}
+.cp-done{background:var(--gold-pale);color:var(--gold);border:1px solid rgba(184,148,63,0.28);}
+.cp-prog{background:var(--green-pale);color:var(--green-mid);}
+
+/* ARCHIVE */
+.archive-block{background:var(--white);border:1px solid var(--border);border-radius:12px;margin-bottom:14px;overflow:hidden;box-shadow:0 2px 8px var(--shadow);}
+.arch-hd{background:var(--green-deep);color:var(--gold-light);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.arch-hd h3{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;letter-spacing:1px;}
+.arch-meta-row{display:flex;gap:14px;font-size:0.73rem;color:rgba(255,255,255,0.48);}
+.arch-toggle{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);color:rgba(255,255,255,0.65);border-radius:4px;padding:3px 9px;font-size:0.7rem;cursor:pointer;font-family:'Source Sans 3',sans-serif;flex-shrink:0;}
+.arch-body{padding:20px;display:none;}
+.arch-body.open{display:block;}
+.arch-stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;}
+.arch-stat{text-align:center;padding:10px 16px;background:var(--green-tint);border-radius:8px;min-width:70px;}
+.arch-stat .av{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--green-deep);}
+.arch-stat .al{font-size:0.62rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-light);margin-top:2px;}
+.arch-champ-item{background:var(--gold-pale);border:1px solid rgba(184,148,63,0.2);border-radius:8px;padding:9px 13px;display:flex;align-items:center;gap:9px;margin-bottom:6px;}
+.arch-score-list{display:flex;flex-direction:column;gap:6px;max-height:240px;overflow-y:auto;}
+
+/* ADMIN */
+.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+@media(max-width:720px){.admin-grid{grid-template-columns:1fr;}}
+.admin-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px;box-shadow:0 2px 8px var(--shadow);}
+.admin-card h3{font-family:'Playfair Display',serif;font-size:1rem;color:var(--green-deep);margin-bottom:14px;padding-bottom:11px;border-bottom:1px solid var(--border-light);}
+.a-lbl{font-size:0.63rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-mid);display:block;margin-bottom:5px;margin-top:11px;}
+.a-lbl:first-of-type{margin-top:0;}
+.mlist{display:flex;flex-direction:column;gap:6px;max-height:340px;overflow-y:auto;}
+.mrow{background:var(--cream);border:1px solid var(--border-light);border-radius:8px;padding:10px 13px;}
+.mrow-top{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.mrow-name{font-weight:700;color:var(--green-deep);font-size:0.88rem;}
+.mrow-meta{font-size:0.7rem;color:var(--text-light);margin-top:2px;}
+.badge{display:inline-block;font-size:0.6rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:20px;}
+.badge-admin{background:var(--eagle-pale);color:var(--eagle);}
+.badge-pending{background:var(--gold-pale);color:#7a6020;}
+.badge-member{background:var(--green-pale);color:var(--green-mid);}
+.approve-btn{background:var(--green-mid);color:white;border:none;border-radius:6px;padding:8px 16px;font-size:0.8rem;font-weight:700;cursor:pointer;}
+.approve-btn:hover{background:var(--green-deep);}
+.reject-btn{background:none;border:1px solid rgba(192,57,43,0.35);color:var(--ace);border-radius:6px;padding:8px 16px;font-size:0.8rem;font-weight:600;cursor:pointer;}
+.reject-btn:hover{background:var(--ace-pale);}
+.pending-notice{background:var(--gold-pale);border:1px solid rgba(184,148,63,0.28);border-radius:10px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:0.84rem;color:var(--text-mid);}
+.reset-zone{background:var(--white);border:1.5px solid rgba(192,57,43,0.2);border-radius:12px;padding:24px;margin-top:20px;}
+.reset-zone h3{font-family:'Playfair Display',serif;font-size:1rem;color:var(--ace);margin-bottom:7px;}
+.reset-zone p{font-size:0.84rem;color:var(--text-mid);line-height:1.6;margin-bottom:14px;}
+.reset-list{list-style:none;margin-bottom:16px;display:flex;flex-direction:column;gap:5px;}
+.reset-list li{font-size:0.82rem;color:var(--text-mid);display:flex;align-items:center;gap:7px;}
+.reset-list li::before{content:'✓';color:var(--green-mid);font-weight:700;}
+
+/* MODALS */
+.overlay{display:none;position:fixed;inset:0;background:rgba(20,40,28,0.52);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(3px);}
+.overlay.open{display:flex;}
+.modal{background:var(--white);border-radius:14px;padding:32px;max-width:430px;width:94%;box-shadow:0 20px 60px var(--shadow-md);animation:fadeUp 0.22s ease;}
+.modal h2{font-family:'Playfair Display',serif;font-size:1.35rem;color:var(--green-deep);margin-bottom:5px;}
+.modal p{font-size:0.84rem;color:var(--text-light);margin-bottom:20px;line-height:1.55;}
+.modal-btns{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;}
+.modal-btns button{flex:1;min-width:90px;}
+.err-hint{font-size:0.77rem;color:var(--ace);margin-top:6px;display:none;}
+.reset-confirm-box{background:var(--ace-pale);border-radius:8px;padding:13px 15px;margin:13px 0;font-size:0.82rem;color:var(--text-dark);line-height:1.8;}
+
+footer{background:var(--green-deep);color:rgba(255,255,255,0.35);text-align:center;padding:26px;font-size:0.68rem;letter-spacing:1.5px;line-height:2;}
+footer .f-gold{color:var(--gold-light);}
+
+@media(max-width:640px){
+  .header-inner{padding:0 14px;min-height:auto;padding-top:10px;padding-bottom:10px;}
+  main{padding:20px 14px;}
+  nav{gap:2px;}
+  .nb{padding:6px 9px;font-size:0.7rem;}
+  .hole-grid{grid-template-columns:repeat(3,1fr);}
+  .stat-row{grid-template-columns:repeat(2,1fr);}
+  .wof-intro{flex-direction:column;gap:12px;padding:20px;}
+  .stype-row{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+
+<div class="gold-band"></div>
+<header>
+  <div class="header-inner">
+    <div class="logo-block">
+      <div class="logo-emblem">
+        <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M28 2L4 12V30C4 42 14 51 28 54C42 51 52 42 52 30V12L28 2Z" fill="#1b3a28" stroke="#b8943f" stroke-width="1.5"/>
+          <path d="M28 7L8 15.5V30C8 40 16 48 28 50.5C40 48 48 40 48 30V15.5L28 7Z" fill="none" stroke="rgba(184,148,63,0.32)" stroke-width="0.8"/>
+          <line x1="28" y1="13" x2="28" y2="40" stroke="#b8943f" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M28 13L38 17.5L28 22Z" fill="#b8943f"/>
+          <path d="M18 37 Q23 32 28 34 Q33 36 38 33 Q41 37 38 39 Q33 41 28 40 Q23 41 18 39Z" fill="#2e7a4a" opacity="0.8"/>
+          <circle cx="14" cy="21" r="1.1" fill="#d4af5a" opacity="0.65"/>
+          <circle cx="42" cy="21" r="1.1" fill="#d4af5a" opacity="0.65"/>
+        </svg>
+      </div>
+      <div>
+        <div class="logo-name"><em>11.5</em> Emporium <span class="season-chip" id="season-chip"></span></div>
+        <div class="logo-tagline">Winners Only · Est. 2024</div>
+        <div class="logo-club">Cobblestone Creek CC</div>
+      </div>
+    </div>
+    <nav>
+      <button class="nb active" id="nb-board"     onclick="showTab('board',this)">Birdie Board</button>
+      <button class="nb"        id="nb-wof"       onclick="showTab('wof',this)">Wall of Fame</button>
+      <button class="nb"        id="nb-standings" onclick="showTab('standings',this)">Standings</button>
+      <button class="nb"        id="nb-archive"   onclick="showTab('archive',this)">Past Seasons</button>
+      <button class="nb nb-post" id="nb-post"     onclick="showTab('post',this)">🐦 Post Score</button>
+      <span id="session-wrap"></span>
+      <button class="nb nb-admin" onclick="openAdminGate()">Admin ⚙</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ══ BIRDIE BOARD ══ -->
+  <div id="tab-board" class="tab active">
+    <div class="page-title">Birdie Board</div>
+    <div class="page-sub">First member to post a birdie or better on each hole claims it for the season.</div>
+    <div class="stat-row" id="stat-row"></div>
+    <div class="legend">
+      <div class="lg-item"><div class="lg-dot lg-ace"></div>Hole-in-One</div>
+      <div class="lg-item"><div class="lg-dot lg-eagle"></div>Eagle</div>
+      <div class="lg-item"><div class="lg-dot lg-birdie"></div>Birdie</div>
+      <div class="lg-item"><div class="lg-dot lg-un"></div>Unclaimed</div>
+    </div>
+    <div class="sec-hd"><div class="sec-hd-title">18-Hole Scorecard</div><div class="sec-hd-line"></div><div class="sec-hd-note">Par 72 · Cobblestone Creek CC</div></div>
+    <div class="hole-grid" id="hole-grid"></div>
+  </div>
+
+  <!-- ══ WALL OF FAME ══ -->
+  <div id="tab-wof" class="tab">
+    <div class="page-title">Wall of Fame</div>
+    <div class="page-sub">Members who have birdied every single hole at Cobblestone Creek in one season.</div>
+    <div class="wof-intro">
+      <div class="wof-intro-icon">🏆</div>
+      <div class="wof-intro-text">
+        <h3>The Complete the Card Challenge</h3>
+        <p>To earn a place on the Wall of Fame, a member must post a birdie or better on all 18 holes within a single season. Each score must be logged with a witness.</p>
+      </div>
+    </div>
+    <div class="sec-hd"><div class="sec-hd-title">Hall of Champions</div><div class="sec-hd-line"></div><div class="sec-hd-note" id="wof-season-note"></div></div>
+    <div class="wof-grid" id="wof-grid"></div>
+    <div style="margin-top:28px;">
+      <div class="sec-hd"><div class="sec-hd-title">Member Progress</div><div class="sec-hd-line"></div><div class="sec-hd-note">Holes birdied this season out of 18</div></div>
+      <div class="wof-progress-grid" id="wof-progress-grid"></div>
+    </div>
+  </div>
+
+  <!-- ══ STANDINGS ══ -->
+  <div id="tab-standings" class="tab">
+    <div class="page-title">Season Standings</div>
+    <div class="page-sub" id="standings-sub"></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Pos</th><th>Player</th><th>Birdies Made</th><th>Eagles Made</th><th>Aces</th><th>Holes Claimed</th><th>Card Progress</th></tr></thead>
+        <tbody id="lb-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ PAST SEASONS ══ -->
+  <div id="tab-archive" class="tab">
+    <div class="page-title">Past Seasons</div>
+    <div class="page-sub">Full archive of every season — scores, hole champions, and Wall of Fame completions.</div>
+    <div id="archive-list"></div>
+  </div>
+
+  <!-- ══ POST SCORE ══ -->
+  <div id="tab-post" class="tab">
+    <div class="page-title">Post a Score</div>
+    <div class="page-sub">Log a birdie, eagle, or hole-in-one. Sign in first, then complete the form below.</div>
+
+    <!-- NOT SIGNED IN STATE -->
+    <div id="post-signin-prompt" class="signin-prompt" style="display:none;">
+      <div class="sp-icon">🐦</div>
+      <h3>Sign in to post a score</h3>
+      <p>You need to be a registered member to post scores. Sign in with your name and PIN, or create a new profile.</p>
+      <div class="sp-btns">
+        <button class="btn-gold" style="margin-top:0;" onclick="openLoginModal()">Sign In</button>
+        <button class="btn-outline" style="margin-top:0;" onclick="openRegModal()">Create Profile</button>
+      </div>
+    </div>
+
+    <!-- SIGNED IN STATE -->
+    <div id="post-form-wrap" style="display:none;">
+      <div class="post-form-card">
+        <h2>Recording a Score</h2>
+        <p class="pfc-sub">Posting as <strong id="posting-as-name"></strong> — select the score type and hole, add your witness, then hit Submit.</p>
+        <div class="form-grid">
+          <div class="fg full">
+            <span class="f-lbl">Score Type</span>
+            <div class="stype-row">
+              <div class="stype sel-b" id="stype-birdie" onclick="selType('birdie',this)">🐦 Birdie</div>
+              <div class="stype" id="stype-eagle" onclick="selType('eagle',this)">🦅 Eagle</div>
+              <div class="stype" id="stype-ace" onclick="selType('ace',this)">🎯 Hole-in-One</div>
+            </div>
+          </div>
+          <div class="fg">
+            <span class="f-lbl">Hole Number</span>
+            <select id="post-hole"></select>
+          </div>
+          <div class="fg">
+            <span class="f-lbl">Date Played</span>
+            <input type="date" id="post-date">
+          </div>
+
+          <div class="fg full">
+            <span class="f-lbl">Witness Name(s) — Required</span>
+            <input type="text" id="post-witness" placeholder="e.g. John Smith, Jane Doe — playing partners who can confirm this score">
+          </div>
+          <div class="fg full">
+            <span class="f-lbl">Notes (optional)</span>
+            <input type="text" id="post-notes" placeholder='e.g. "Knocked it to 3 feet from 150 yards"'>
+          </div>
+        </div>
+        <button class="btn-gold" onclick="submitScore()">Submit Score ▶</button>
+        <div class="alert alert-ok"  id="post-ok"></div>
+        <div class="alert alert-err" id="post-err"></div>
+      </div>
+    </div>
+
+    <div class="sec-hd"><div class="sec-hd-title">Recent Submissions</div><div class="sec-hd-line"></div></div>
+    <div class="feed" id="post-feed"></div>
+  </div>
+
+  <!-- ══ ADMIN ══ -->
+  <div id="tab-admin" class="tab">
+    <div class="page-title">Admin Panel</div>
+    <div class="page-sub">Manage members, approve registrations, and reset the season when needed.</div>
+    <div id="pending-section"></div>
+    <div class="admin-grid">
+      <div class="admin-card">
+        <h3>Add / Update Member</h3>
+        <span class="a-lbl">Full Name</span><input type="text" id="a-name" placeholder="e.g. John Smith">
+
+        <span class="a-lbl">Member PIN (4 digits)</span><input type="password" id="a-pin" placeholder="e.g. 1234" maxlength="4">
+        <span class="a-lbl">HCP Index</span><input type="number" id="a-hcp" placeholder="e.g. 12.4" step="0.1">
+        <span class="a-lbl">Rounds Posted This Season</span><input type="number" id="a-rounds" placeholder="e.g. 18">
+        <span class="a-lbl">Role</span>
+        <select id="a-role"><option value="member">Member</option><option value="admin">Admin</option></select>
+        <br><button class="btn-primary" onclick="saveMember()">Save Member</button>
+        <div class="alert alert-ok" id="member-ok" style="margin-top:10px;"></div>
+      </div>
+      <div class="admin-card">
+        <h3>Registered Members</h3>
+        <div class="mlist" id="mlist"></div>
+      </div>
+      <div class="admin-card" style="grid-column:1/-1;">
+        <h3>Full Score Log — Current Season</h3>
+        <div class="feed" id="admin-feed"></div>
+      </div>
+    </div>
+    <div class="reset-zone">
+      <h3>⚠ Season Reset</h3>
+      <p>Closes the current season, archives everything, and starts a new season fresh. Member profiles and PINs are always kept.</p>
+      <ul class="reset-list">
+        <li>All scores archived under the current season year</li>
+        <li>All hole claims cleared — every hole becomes available again</li>
+        <li>Wall of Fame champions saved to the archive</li>
+        <li>Member profiles &amp; PINs retained</li>
+      </ul>
+      <button class="btn-danger" onclick="openResetConfirm()">Archive Season &amp; Start New Year</button>
+      <div class="alert alert-warn" id="reset-note" style="margin-top:12px;display:none;"></div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div style="font-size:1.3rem;margin-bottom:5px;">⛳</div>
+  <div><span class="f-gold">11.5 Emporium Birdie Board</span></div>
+  <div>Cobblestone Creek Country Club · 100 Cobble Creek Rd, Victor, NY 14564</div>
+  <div>Winners Only</div>
+</footer>
+
+<!-- ── SIGN IN MODAL ── -->
+<div class="overlay" id="login-modal">
+  <div class="modal">
+    <h2>Member Sign-In</h2>
+    <p>Select your name and enter your 4-digit PIN. Not registered yet? <a href="#" onclick="closeModal('login-modal');openRegModal();" style="color:var(--green-mid);font-weight:600;">Create a profile →</a></p>
+    <span class="a-lbl">Your Name</span>
+    <select id="login-sel"><option value="">Select your name...</option></select>
+    <span class="a-lbl" style="margin-top:13px;">4-Digit PIN</span>
+    <input type="password" id="login-pin" maxlength="4" placeholder="Enter your PIN" onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="err-hint" id="login-err">Incorrect name or PIN. Please try again.</div>
+    <div class="modal-btns">
+      <button class="btn-primary" style="margin-top:0;" onclick="doLogin()">Sign In</button>
+      <button class="btn-outline" style="margin-top:0;" onclick="closeModal('login-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── REGISTER MODAL ── -->
+<div class="overlay" id="reg-modal">
+  <div class="modal">
+    <h2>Create Member Profile</h2>
+    <p>Fill in your details below. An admin will review and approve your account. Once approved you can sign in and start posting scores.</p>
+    <span class="a-lbl">Full Name</span>
+    <input type="text" id="reg-name" placeholder="e.g. John Smith">
+
+    <span class="a-lbl" style="margin-top:13px;">Choose a 4-Digit PIN</span>
+    <input type="password" id="reg-pin" maxlength="4" placeholder="You'll use this every time you sign in">
+    <div class="err-hint" id="reg-err">Please fill in all fields. PIN must be 4 digits.</div>
+    <div class="modal-btns">
+      <button class="btn-primary" style="margin-top:0;" onclick="doRegister()">Submit for Approval</button>
+      <button class="btn-outline" style="margin-top:0;" onclick="closeModal('reg-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── ADMIN LOGIN MODAL ── -->
+<div class="overlay" id="admin-modal">
+  <div class="modal">
+    <h2>Admin Access</h2>
+    <p>Enter the admin password to manage members, approve registrations, and reset the season.</p>
+    <span class="a-lbl">Password</span>
+    <input type="password" id="admin-pw" placeholder="Admin password" onkeydown="if(event.key==='Enter')doAdminLogin()">
+    <div class="err-hint" id="admin-err">Incorrect password. Please try again.</div>
+    <div class="modal-btns">
+      <button class="btn-primary" style="margin-top:0;" onclick="doAdminLogin()">Enter</button>
+      <button class="btn-outline" style="margin-top:0;" onclick="closeModal('admin-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── RESET CONFIRM MODAL ── -->
+<div class="overlay" id="reset-modal">
+  <div class="modal">
+    <h2>Confirm Season Reset</h2>
+    <p>This will archive the current season and start a new one. This cannot be undone.</p>
+    <div class="reset-confirm-box">
+      <strong style="color:var(--ace);">Will be archived:</strong> All scores · All hole claims · Wall of Fame<br>
+      <strong style="color:var(--green-mid);">Will be kept:</strong> All member profiles &amp; PINs
+    </div>
+    <span class="a-lbl">Type RESET to confirm</span>
+    <input type="text" id="reset-input" placeholder="Type RESET here" style="margin-top:5px;">
+    <div class="err-hint" id="reset-err">Please type RESET to confirm.</div>
+    <div class="modal-btns">
+      <button class="btn-danger" style="margin-top:0;" onclick="doReset()">Archive &amp; Reset Season</button>
+      <button class="btn-outline" style="margin-top:0;" onclick="closeModal('reset-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════
+// DATA
+// ════════════════════════════════
+const HOLES=18, PARS=[4,4,3,5,4,3,4,5,4,4,3,5,4,4,3,5,4,4], ADMIN_PW='cccc115';
+
+let db = JSON.parse(localStorage.getItem('cc_v6')||'null') || {
+  season: new Date().getFullYear(),
+  members:[],
+  scores:[],
+  holes:Array.from({length:HOLES},(_,i)=>({num:i+1,par:PARS[i],claimer:null,type:null,date:null,witness:null})),
+  archives:[]
+};
+
+// Rebuild hole claims
+db.scores.forEach(s=>{const h=db.holes[s.hole-1];if(!h.claimer){h.claimer=s.player;h.type=s.type;h.date=s.date;h.witness=s.witness;}});
+save();
+
+function save(){localStorage.setItem('cc_v6',JSON.stringify(db));}
+
+let session=null, selScoreType='birdie';
+
+// ── AUTO RESET ──
+function checkAutoReset(){
+  const y=new Date().getFullYear();
+  if(y>db.season){
+    archiveSeason('Auto-reset on January 1st, '+y);
+    const el=document.getElementById('reset-note');
+    el.textContent=`🎉 New season ${db.season} started automatically. Season ${db.season-1} has been archived.`;
+    el.className='alert alert-warn'; el.style.display='block';
+    setTimeout(()=>el.style.display='none',8000);
+  }
+}
+
+function archiveSeason(trigger){
+  const champs=approvedMembers().filter(m=>hasCompletedCard(m.name)).map(m=>({
+    name:m.name,birdies:countOf(m.name,'birdie'),eagles:countOf(m.name,'eagle'),aces:countOf(m.name,'ace')
+  }));
+  db.archives.unshift({
+    season:db.season, trigger,
+    archivedOn:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
+    scores:JSON.parse(JSON.stringify(db.scores)),
+    holes:JSON.parse(JSON.stringify(db.holes)),
+    champions:champs,
+    stats:{birdies:db.scores.filter(s=>s.type==='birdie').length,eagles:db.scores.filter(s=>s.type==='eagle').length,aces:db.scores.filter(s=>s.type==='ace').length,claimed:db.holes.filter(h=>h.claimer).length}
+  });
+  const newYear=new Date().getFullYear();
+  db.season=newYear>db.season?newYear:db.season+1;
+  db.scores=[];
+  db.holes=Array.from({length:HOLES},(_,i)=>({num:i+1,par:PARS[i],claimer:null,type:null,date:null,witness:null}));
+  save();
+}
+
+// ── SESSION ──
+function updateSessionUI(){
+  document.getElementById('season-chip').textContent='Season '+db.season;
+  const sw=document.getElementById('session-wrap');
+  if(session){
+    sw.innerHTML=`<span class="pill-name">${session.name}</span><button class="sign-out-btn" onclick="logout()">Sign Out</button>`;
+  } else {
+    sw.innerHTML=`<button class="nb" onclick="openLoginModal()" style="border-color:rgba(255,255,255,0.2);color:rgba(255,255,255,0.65);">Sign In</button>`;
+  }
+  // Update post tab visibility
+  updatePostTab();
+}
+
+function updatePostTab(){
+  const prompt=document.getElementById('post-signin-prompt');
+  const form=document.getElementById('post-form-wrap');
+  if(!prompt||!form)return;
+  if(session){
+    prompt.style.display='none';
+    form.style.display='block';
+    document.getElementById('posting-as-name').textContent=session.name;
+    populatePostForm();
+  } else {
+    prompt.style.display='block';
+    form.style.display='none';
+  }
+}
+
+function logout(){session=null;updateSessionUI();showTab('board',document.getElementById('nb-board'));}
+
+function openLoginModal(){
+  document.getElementById('login-sel').innerHTML='<option value="">Select your name...</option>'+
+    db.members.filter(m=>m.status==='approved').map(m=>`<option value="${m.name}">${m.name}</option>`).join('');
+  document.getElementById('login-pin').value='';
+  document.getElementById('login-err').style.display='none';
+  openModal('login-modal');
+}
+
+function doLogin(){
+  const name=document.getElementById('login-sel').value;
+  const pin=document.getElementById('login-pin').value;
+  const m=db.members.find(x=>x.name===name&&String(x.pin)===String(pin)&&x.status==='approved');
+  if(!m){document.getElementById('login-err').style.display='block';return;}
+  session=m;
+  closeModal('login-modal');
+  updateSessionUI();
+  showTab('post',document.getElementById('nb-post'));
+}
+
+function openRegModal(){
+  ['reg-name','reg-pin'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('reg-err').style.display='none';
+  openModal('reg-modal');
+}
+
+function doRegister(){
+  const name=document.getElementById('reg-name').value.trim();
+  const pin=document.getElementById('reg-pin').value.trim();
+  if(!name||pin.length<4){document.getElementById('reg-err').style.display='block';return;}
+  if(db.members.find(m=>m.name.toLowerCase()===name.toLowerCase())){
+    document.getElementById('reg-err').textContent='A member with that name already exists.';
+    document.getElementById('reg-err').style.display='block';return;
+  }
+  db.members.push({name,pin,hcp:0,rounds:0,role:'member',status:'pending'});
+  save();closeModal('reg-modal');
+  alert('✓ Profile submitted for approval! An admin will activate your account shortly. Once approved, come back and Sign In.');
+}
+
+function openAdminGate(){
+  document.getElementById('admin-pw').value='';
+  document.getElementById('admin-err').style.display='none';
+  openModal('admin-modal');
+  setTimeout(()=>document.getElementById('admin-pw').focus(),100);
+}
+
+function doAdminLogin(){
+  if(document.getElementById('admin-pw').value===ADMIN_PW){
+    closeModal('admin-modal');showTab('admin',null);renderAdminPanel();
+  } else {document.getElementById('admin-err').style.display='block';}
+}
+
+function openResetConfirm(){
+  document.getElementById('reset-input').value='';
+  document.getElementById('reset-err').style.display='none';
+  openModal('reset-modal');
+}
+
+function doReset(){
+  if(document.getElementById('reset-input').value.trim().toUpperCase()!=='RESET'){
+    document.getElementById('reset-err').style.display='block';return;
+  }
+  const prevSeason=db.season;
+  archiveSeason('Manual admin reset');
+  closeModal('reset-modal');
+  renderAll();renderAdminPanel();
+  const el=document.getElementById('reset-note');
+  el.textContent=`✓ Season ${prevSeason} archived. Season ${db.season} is now underway!`;
+  el.className='alert alert-warn';el.style.display='block';
+  setTimeout(()=>el.style.display='none',7000);
+}
+
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+
+// ── HELPERS ──
+function fmtDate(d){if(!d)return'—';const[y,mo,dy]=d.split('-');return['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+mo-1]+' '+parseInt(dy)+', '+y;}
+function scoreLabel(t){return t==='ace'?'Hole-in-One':t==='eagle'?'Eagle':'Birdie';}
+function scoreIcon(t){return t==='ace'?'🎯':t==='eagle'?'🦅':'🐦';}
+function badgeEl(t){const c=t==='ace'?'sb-ace':t==='eagle'?'sb-eagle':'sb-birdie';return `<span class="score-badge ${c}">${scoreIcon(t)} ${scoreLabel(t)}</span>`;}
+function hcls(t){return t==='ace'?'hole-card h-ace':t==='eagle'?'hole-card h-eagle':t?'hole-card h-birdie':'hole-card h-un';}
+function countOf(name,type,sc){return(sc||db.scores).filter(s=>s.player===name&&s.type===type).length;}
+function holesClaimed(name){return db.holes.filter(h=>h.claimer===name).length;}
+function approvedMembers(){return db.members.filter(m=>m.status==='approved');}
+function holesBirdiedBy(name,sc){return new Set((sc||db.scores).filter(s=>s.player===name).map(s=>s.hole));}
+function hasCompletedCard(name,sc){return holesBirdiedBy(name,sc).size===HOLES;}
+
+// ── RENDERS ──
+function renderStats(){
+  const claimed=db.holes.filter(h=>h.claimer).length;
+  const birdies=db.scores.filter(s=>s.type==='birdie').length;
+  const eagles=db.scores.filter(s=>s.type==='eagle').length;
+  const aces=db.scores.filter(s=>s.type==='ace').length;
+  const champs=approvedMembers().filter(m=>hasCompletedCard(m.name)).length;
+  document.getElementById('stat-row').innerHTML=`
+    <div class="stat-card"><div class="sc-label">Holes Claimed</div><div class="sc-val">${claimed}<span style="font-size:1rem;color:var(--text-light)"> / ${HOLES}</span></div><div class="sc-sub">${HOLES-claimed} still available</div></div>
+    <div class="stat-card"><div class="sc-label">Birdies Made</div><div class="sc-val">${birdies}</div><div class="sc-sub">Posted this season</div></div>
+    <div class="stat-card eagle-card"><div class="sc-label">Eagles Made</div><div class="sc-val eagle-val">${eagles}</div><div class="sc-sub">Season total</div></div>
+    <div class="stat-card ace-card"><div class="sc-label">Holes-in-One</div><div class="sc-val ace-val">${aces}</div><div class="sc-sub">All-time</div></div>
+    <div class="stat-card"><div class="sc-label">Wall of Fame</div><div class="sc-val" style="color:var(--gold)">${champs}</div><div class="sc-sub">Completed the card</div></div>
+  `;
+}
+
+function renderHoleGrid(){
+  document.getElementById('hole-grid').innerHTML=db.holes.map(h=>`
+    <div class="${hcls(h.type)}">
+      <div class="hc-lbl">Hole</div><div class="hc-num">${h.num}</div><div class="hc-par">Par ${h.par}</div>
+      ${h.claimer
+        ?`${badgeEl(h.type)}<div class="hc-claimer">${h.claimer.split(' ').map((n,i)=>i===0?n[0]+'.':n).join(' ')}</div><div class="hc-date">${fmtDate(h.date)}</div>`
+        :`<span class="score-badge sb-un">Unclaimed</span>`}
+    </div>`).join('');
+}
+
+function renderWoF(){
+  const champions=approvedMembers().filter(m=>hasCompletedCard(m.name));
+  document.getElementById('wof-season-note').textContent='Season '+db.season;
+  document.getElementById('wof-grid').innerHTML=champions.length===0
+    ?`<div class="wof-empty-champ"><div class="wec-icon">🏆</div><p>No members have completed the card yet this season. The Wall of Fame awaits the first golfer to birdie all 18 holes.</p></div>`
+    :champions.map(m=>`
+      <div class="wof-card">
+        <div class="wof-trophy">🏆</div>
+        <div class="wof-label">Wall of Fame · Season ${db.season}</div>
+        <div class="wof-name">${m.name}</div>
+        <div class="wof-detail">All 18 holes birdied or better · Cobblestone Creek CC</div>
+        <div class="wof-badge-row">
+          <span class="wof-badge">🐦 ${countOf(m.name,'birdie')} Birdies</span>
+          ${countOf(m.name,'eagle')>0?`<span class="wof-badge">🦅 ${countOf(m.name,'eagle')} Eagles</span>`:''}
+          ${countOf(m.name,'ace')>0?`<span class="wof-badge">🎯 ${countOf(m.name,'ace')} Aces</span>`:''}
+        </div>
+      </div>`).join('');
+  document.getElementById('wof-progress-grid').innerHTML=approvedMembers().map(m=>{
+    const done=holesBirdiedBy(m.name);
+    return `<div class="wof-prog-card">
+      <div class="wof-prog-top"><span class="wof-prog-name">${m.name}</span><span class="wof-prog-count">${done.size}/18</span></div>
+      <div class="wof-prog-bar-bg"><div class="wof-prog-fill" style="width:${Math.round(done.size/HOLES*100)}%"></div></div>
+      <div class="wof-prog-holes">${Array.from({length:HOLES},(_,i)=>`<span class="pip ${done.has(i+1)?'pip-done':'pip-todo'}">${i+1}</span>`).join('')}</div>
+    </div>`;}).join('');
+}
+
+function renderLeaderboard(){
+  document.getElementById('standings-sub').textContent=`Season ${db.season} — ranked by total under-par scores posted.`;
+  const sorted=[...approvedMembers()].sort((a,b)=>
+    (countOf(b.name,'birdie')+countOf(b.name,'eagle')*2+countOf(b.name,'ace')*5)-
+    (countOf(a.name,'birdie')+countOf(a.name,'eagle')*2+countOf(a.name,'ace')*5));
+  document.getElementById('lb-body').innerHTML=sorted.map((p,i)=>{
+    const done=holesBirdiedBy(p.name).size;
+    const complete=hasCompletedCard(p.name);
+    return `<tr>
+      <td class="rank-td ${i===0?'r1':i===1?'r2':i===2?'r3':''}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</td>
+      <td class="pn">${p.name}</td>
+      <td><span class="si si-b">🐦 ${countOf(p.name,'birdie')}</span></td>
+      <td><span class="si si-e">🦅 ${countOf(p.name,'eagle')}</span></td>
+      <td><span class="si si-a">🎯 ${countOf(p.name,'ace')}</span></td>
+      <td>${holesClaimed(p.name)}</td>
+      <td><span class="cp ${complete?'cp-done':'cp-prog'}">${complete?'🏆 Complete':done+' / 18'}</span></td>
+    </tr>`;}).join('');
+}
+
+function renderArchive(){
+  const el=document.getElementById('archive-list');
+  if(db.archives.length===0){
+    el.innerHTML=`<div class="feed-empty">No past seasons yet. When the season resets, everything will be archived here.</div>`;return;
+  }
+  el.innerHTML=db.archives.map((a,ai)=>`
+    <div class="archive-block">
+      <div class="arch-hd" onclick="toggleArch(${ai})">
+        <h3>⛳ Season ${a.season}</h3>
+        <div style="display:flex;align-items:center;gap:16px;">
+          <div class="arch-meta-row">
+            <span>🐦 ${a.stats.birdies}</span><span>🦅 ${a.stats.eagles}</span>
+            <span>🎯 ${a.stats.aces}</span><span>🏆 ${a.champions.length} champ${a.champions.length!==1?'s':''}</span>
+          </div>
+          <button class="arch-toggle">View ▾</button>
+        </div>
+      </div>
+      <div class="archive-body" id="arch-${ai}">
+        <div class="arch-stats-row">
+          <div class="arch-stat"><div class="av">${a.stats.birdies}</div><div class="al">Birdies</div></div>
+          <div class="arch-stat"><div class="av" style="color:var(--eagle)">${a.stats.eagles}</div><div class="al">Eagles</div></div>
+          <div class="arch-stat"><div class="av" style="color:var(--ace)">${a.stats.aces}</div><div class="al">Aces</div></div>
+          <div class="arch-stat"><div class="av">${a.stats.claimed}</div><div class="al">Claimed</div></div>
+          <div class="arch-stat"><div class="av" style="color:var(--gold)">${a.champions.length}</div><div class="al">Champs</div></div>
+        </div>
+        <div class="sec-hd" style="margin-bottom:10px;"><div class="sec-hd-title" style="font-size:1rem;">Wall of Fame</div><div class="sec-hd-line"></div></div>
+        ${a.champions.length===0
+          ?`<p style="color:var(--text-light);font-size:0.84rem;margin-bottom:14px;">No members completed the card this season.</p>`
+          :a.champions.map(c=>`<div class="arch-champ-item"><span style="font-size:1.1rem;">🏆</span><div><div style="font-weight:700;color:var(--green-deep);font-size:0.88rem;">${c.name}</div><div style="font-size:0.72rem;color:var(--text-light);">🐦 ${c.birdies} · 🦅 ${c.eagles} · 🎯 ${c.aces}</div></div></div>`).join('')}
+        <div class="sec-hd" style="margin-top:18px;margin-bottom:10px;"><div class="sec-hd-title" style="font-size:1rem;">All Scores (${a.scores.length})</div><div class="sec-hd-line"></div></div>
+        <div class="arch-score-list">
+          ${a.scores.length===0?`<div class="feed-empty">No scores were posted this season.</div>`
+            :[...a.scores].reverse().map(s=>`<div class="feed-item">
+              <div class="fi-body"><span class="fi-player">${s.player}</span><span class="fi-detail">Hole ${s.hole} · ${scoreLabel(s.type)} · ${fmtDate(s.date)}</span>${s.witness?`<span class="fi-witness">Witnessed by ${s.witness}</span>`:''}</div>
+              <div>${badgeEl(s.type)}</div></div>`).join('')}
+        </div>
+        <div style="font-size:0.7rem;color:var(--text-light);margin-top:12px;">Archived ${a.archivedOn} · ${a.trigger}</div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleArch(i){document.getElementById('arch-'+i).classList.toggle('open');}
+
+function renderFeed(elId,limit){
+  const list=[...db.scores].reverse().slice(0,limit||999);
+  document.getElementById(elId).innerHTML=list.length===0
+    ?`<div class="feed-empty">No scores posted yet this season.</div>`
+    :list.map(s=>`<div class="feed-item">
+        <div class="fi-body">
+          <span class="fi-player">${s.player}</span>
+          <span class="fi-detail">Hole ${s.hole} (Par ${db.holes[s.hole-1].par}) · ${scoreLabel(s.type)} · ${fmtDate(s.date)}</span>
+          ${s.witness?`<span class="fi-witness">Witnessed by ${s.witness}</span>`:''}
+          ${s.notes?`<span class="fi-notes">"${s.notes}"</span>`:''}
+        </div>
+        <div>${badgeEl(s.type)}</div>
+      </div>`).join('');
+}
+
+function renderAdminPanel(){
+  const pending=db.members.filter(m=>m.status==='pending');
+  document.getElementById('pending-section').innerHTML=pending.length>0
+    ?`<div class="pending-notice">⏳ &nbsp;<strong>${pending.length} member${pending.length>1?'s':''} awaiting approval</strong> — review below.</div>`:'';
+  document.getElementById('mlist').innerHTML=db.members.map((m,i)=>`
+    <div class="mrow">
+      <div class="mrow-top">
+        <span class="mrow-name">${m.name}</span>
+        <span class="badge ${m.status==='pending'?'badge-pending':m.role==='admin'?'badge-admin':'badge-member'}">${m.status==='pending'?'Pending':m.role==='admin'?'Admin':'Member'}</span>
+      </div>
+      <div class="mrow-meta">HCP: ${m.hcp} · ${m.rounds} rounds · PIN set ✓</div>
+      <div style="margin-top:7px;display:flex;gap:6px;flex-wrap:wrap;">
+        ${m.status==='pending'?`<button class="approve-btn" onclick="approveMember(${i})">✓ Approve</button>`:''}
+        <button class="reject-btn" style="margin-left:0;" onclick="deleteMember(${i})">🗑 Delete</button>
+      </div></div>`).join('');
+  renderFeed('admin-feed',999);
+}
+
+function approveMember(i){db.members[i].status='approved';save();renderAdminPanel();renderAll();}
+function rejectMember(i){if(confirm(`Remove ${db.members[i].name}'s registration?`)){db.members.splice(i,1);save();renderAdminPanel();}}
+function deleteMember(i){if(confirm(`Delete ${db.members[i].name}? This cannot be undone.`)){db.members.splice(i,1);save();renderAdminPanel();renderAll();}}
+
+function saveMember(){
+  const name=document.getElementById('a-name').value.trim();
+  const pin=document.getElementById('a-pin').value.trim();
+  const hcp=parseFloat(document.getElementById('a-hcp').value)||0;
+  const rounds=parseInt(document.getElementById('a-rounds').value)||0;
+  const role=document.getElementById('a-role').value;
+  if(!name||!pin){alert('Name and PIN are required.');return;}
+  const idx=db.members.findIndex(m=>m.name.toLowerCase()===name.toLowerCase());
+  const obj={name,pin,hcp,rounds,role,status:'approved'};
+  if(idx>=0)db.members[idx]=obj; else db.members.push(obj);
+  save();renderAll();renderAdminPanel();
+  ['a-name','a-pin','a-hcp','a-rounds'].forEach(id=>document.getElementById(id).value='');
+  flash(document.getElementById('member-ok'),'✓ Member saved and approved.');
+}
+
+function populatePostForm(){
+  const holeEl=document.getElementById('post-hole');
+  if(!holeEl)return;
+  holeEl.innerHTML=db.holes.map(h=>`<option value="${h.num}">Hole ${h.num} (Par ${h.par}) — ${h.claimer?'Claimed by '+h.claimer.split(' ').slice(-1)[0]:'Unclaimed ⭐'}</option>`).join('');
+  const dateEl=document.getElementById('post-date');
+  if(dateEl&&!dateEl.value) dateEl.value=new Date().toISOString().split('T')[0];
+}
+
+// ── SCORE ACTIONS ──
+function selType(type,el){
+  selScoreType=type;
+  ['birdie','eagle','ace'].forEach(t=>{
+    const b=document.getElementById('stype-'+t);
+    if(b) b.className='stype'+(t===type?' sel-'+t[0]:'');
+  });
+}
+
+function submitScore(){
+  const hole=parseInt(document.getElementById('post-hole').value);
+  const date=document.getElementById('post-date').value;
+  const witness=document.getElementById('post-witness').value.trim();
+  const notes=document.getElementById('post-notes').value.trim();
+  const okEl=document.getElementById('post-ok');
+  const errEl=document.getElementById('post-err');
+  if(!session){flash(errEl,'You must be signed in to post a score.');return;}
+  if(!hole||!date){flash(errEl,'Please select a hole and date.');return;}
+  if(!witness){flash(errEl,'A witness name is required to verify this score.');return;}
+  const entry={player:session.name,type:selScoreType,hole,date,witness,notes};
+  db.scores.push(entry);
+  const h=db.holes[hole-1];
+  if(!h.claimer){h.claimer=session.name;h.type=selScoreType;h.date=date;h.witness=witness;}
+  save();renderAll();populatePostForm();
+  document.getElementById('post-witness').value='';
+  document.getElementById('post-notes').value='';
+  renderFeed('post-feed',20);
+  const complete=hasCompletedCard(session.name);
+  flash(okEl,`${scoreIcon(selScoreType)} ${scoreLabel(selScoreType)} on Hole ${hole} recorded! ${complete?'🏆 YOU COMPLETED THE CARD — Wall of Fame! Congratulations!':''}`);
+}
+
+function flash(el,msg){el.textContent=msg;el.style.display='block';setTimeout(()=>el.style.display='none',6000);}
+
+// ── TABS ──
+function showTab(id,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  const el=document.getElementById('tab-'+id);
+  if(el)el.classList.add('active');
+  if(btn)btn.classList.add('active');
+  if(id==='post'){updatePostTab();renderFeed('post-feed',20);}
+  if(id==='archive')renderArchive();
+}
+
+function renderAll(){renderStats();renderHoleGrid();renderWoF();renderLeaderboard();updateSessionUI();}
+renderAll();
+checkAutoReset();
+
+// ── SERVICE WORKER ──
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  });
+}
+</script>
+</body>
+</html>
