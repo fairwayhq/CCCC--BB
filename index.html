@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<!-- BIRDIE BOARD v12 - CLEAN REBUILD -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Birdie Board">
+<meta name="theme-color" content="#1b3a28">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<title>11.5 Emporium — Birdie Board</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,400&family=Playfair+Display:wght@700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#1b3a28;--green-deep:#0f2318;--green-mid:#2e6644;--green-tint:#f0f4f1;
+  --gold:#b8943f;--gold-light:#d4af5a;--gold-bright:#f0d080;--gold-pale:#fdf6e3;
+  --white:#fff;--border:#d8e4dc;--text:#1a2e20;--text-mid:#4a6a52;--text-light:#7a9e82;
+  --shadow:rgba(15,35,24,0.10);--eagle:#1a6b3a;--ace:#8b1a1a;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{font-family:"Source Sans 3",sans-serif;color:var(--text);background:#f5f7f5;}
+.gold-band{height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+header{background:var(--green-deep);border-bottom:1px solid rgba(184,148,63,0.2);position:sticky;top:0;z-index:100;}
+.header-inner{max-width:1100px;margin:0 auto;padding:8px 16px 0;}
+.header-top{display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;}
+.logo-block{display:flex;align-items:center;gap:10px;}
+.logo-emblem svg{width:34px;height:34px;}
+.logo-name{font-family:"Cormorant Garamond",serif;font-size:1.3rem;font-weight:700;letter-spacing:1px;color:var(--gold-light);line-height:1;}
+.logo-name em{font-style:italic;color:var(--gold-bright);}
+.logo-tagline{font-size:0.56rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-top:1px;}
+.logo-club{font-size:0.62rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.48);display:flex;align-items:center;gap:5px;margin-top:1px;}
+.logo-club::before,.logo-club::after{content:"";display:block;width:12px;height:1px;background:var(--gold);opacity:0.45;}
+.header-actions{display:flex;align-items:flex-end;gap:6px;flex-shrink:0;}
+nav{display:flex;align-items:center;justify-content:center;gap:2px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,0.06);padding:6px 0;}
+.nb{background:none;border:1px solid transparent;color:rgba(255,255,255,0.55);padding:6px 11px;border-radius:20px;font-size:0.73rem;cursor:pointer;font-family:"Source Sans 3",sans-serif;font-weight:600;transition:all 0.15s;white-space:nowrap;position:relative;}
+.nb:hover,.nb.active{color:var(--gold-light);border-color:rgba(184,148,63,0.4);background:rgba(184,148,63,0.1);}
+.nb-post{color:var(--gold)!important;border-color:var(--gold)!important;background:rgba(184,148,63,0.12)!important;}
+.nb-admin{color:rgba(255,255,255,0.3)!important;font-size:0.68rem!important;}
+.nb-signin{color:white!important;background:rgba(184,148,63,0.2)!important;border-color:rgba(184,148,63,0.5)!important;}
+.nb-qr{padding:6px 10px!important;}
+.act-badge{display:inline-block;background:#e74c3c;color:white;font-size:0.58rem;font-weight:700;border-radius:10px;padding:1px 5px;margin-left:3px;vertical-align:middle;}
+.season-chip{font-size:0.65rem;background:rgba(184,148,63,0.2);border:1px solid rgba(184,148,63,0.3);color:var(--gold-light);padding:2px 8px;border-radius:10px;letter-spacing:1px;vertical-align:middle;margin-left:6px;}
+main{max-width:1100px;margin:0 auto;padding:20px 16px 60px;}
+.tab{display:none;}.tab.active{display:block;}
+.page-title{font-family:"Playfair Display",serif;font-size:1.6rem;color:var(--green-deep);margin-bottom:6px;}
+.page-sub{font-size:0.88rem;color:var(--text-light);margin-bottom:20px;}
+.stat-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px 18px;flex:1;min-width:100px;box-shadow:0 2px 8px var(--shadow);}
+.eagle-card{border-color:rgba(26,107,58,0.25);}.ace-card{border-color:rgba(139,26,26,0.25);}
+.sc-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);margin-bottom:4px;}
+.sc-val{font-family:"Playfair Display",serif;font-size:1.8rem;color:var(--green-deep);line-height:1;}
+.eagle-val{color:var(--eagle);}.ace-val{color:var(--ace);}
+.sc-sub{font-size:0.7rem;color:var(--text-light);margin-top:3px;}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:16px;}
+.lg-item{display:flex;align-items:center;gap:5px;font-size:0.75rem;color:var(--text-mid);}
+.lg-dot{width:10px;height:10px;border-radius:50%;}
+.lg-ace{background:var(--ace);}.lg-eagle{background:var(--eagle);}.lg-birdie{background:#2e7d32;}.lg-un{background:#c0c0c0;}
+.sec-hd{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.sec-hd-title{font-family:"Playfair Display",serif;font-size:1.05rem;color:var(--green-deep);white-space:nowrap;}
+.sec-hd-line{flex:1;height:1px;background:var(--border);}
+.sec-hd-note{font-size:0.72rem;color:var(--text-light);white-space:nowrap;}
+.hole-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-bottom:28px;}
+.hc{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:12px 10px;text-align:center;box-shadow:0 2px 6px var(--shadow);}
+.hc-birdie{border-color:#a5d6a7;background:#f1f8e9;}.hc-eagle{border-color:#a5d6a7;background:#e8f5e9;}
+.hc-ace{border-color:#ef9a9a;background:#fce4ec;}.hc-albatross{border-color:#ffcc80;background:#fff3e0;}
+.hc-lbl{font-size:0.6rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);}
+.hc-num{font-family:"Playfair Display",serif;font-size:1.5rem;color:var(--green-deep);line-height:1.1;}
+.hc-par{font-size:0.7rem;color:var(--text-light);margin-bottom:6px;}
+.hc-claimer{font-size:0.72rem;font-weight:700;color:var(--green-deep);margin-top:4px;}
+.hc-date{font-size:0.62rem;color:var(--text-light);}
+.score-badge{display:inline-block;font-size:0.7rem;font-weight:700;border-radius:6px;padding:3px 8px;}
+.sb-birdie{background:#e8f5e9;color:#2e7d32;}.sb-eagle{background:#e8f5e9;color:var(--eagle);}
+.sb-ace{background:#fce4ec;color:var(--ace);}.sb-un{background:#f5f5f5;color:#9e9e9e;}
+.sb-albatross{background:#fff3e0;color:#e65100;}
+.wof-intro{background:var(--green-deep);border-radius:14px;padding:20px;display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;border:1px solid rgba(184,148,63,0.2);}
+.wof-intro-icon{font-size:2.5rem;}
+.wof-intro-text h3{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--gold-light);margin-bottom:6px;}
+.wof-intro-text p{font-size:0.82rem;color:rgba(255,255,255,0.55);line-height:1.6;}
+.wof-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:10px;}
+.wof-card{background:linear-gradient(135deg,var(--green-deep),#1a3a28);border:1px solid rgba(184,148,63,0.35);border-radius:14px;padding:20px;text-align:center;}
+.wof-trophy{font-size:2.5rem;margin-bottom:8px;}
+.wof-label{font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:6px;}
+.wof-name{font-family:"Playfair Display",serif;font-size:1.3rem;color:var(--gold-light);margin-bottom:6px;}
+.wof-detail{font-size:0.72rem;color:rgba(255,255,255,0.4);margin-bottom:12px;}
+.wof-badge-row{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;}
+.wof-badge{background:rgba(184,148,63,0.15);border:1px solid rgba(184,148,63,0.3);color:var(--gold-light);font-size:0.72rem;padding:3px 10px;border-radius:20px;}
+.wof-empty-champ{text-align:center;padding:40px 20px;color:var(--text-light);}
+.wof-progress-grid{display:flex;flex-direction:column;gap:12px;}
+.wof-prog-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.wof-prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.wof-prog-name{font-weight:700;color:var(--green-deep);font-size:0.9rem;}
+.wof-prog-count{font-size:0.8rem;color:var(--text-mid);font-weight:600;}
+.wof-prog-bar-bg{height:6px;background:var(--green-tint);border-radius:3px;margin-bottom:8px;overflow:hidden;}
+.wof-prog-fill{height:100%;background:linear-gradient(90deg,var(--green-mid),var(--gold));border-radius:3px;}
+.wof-prog-holes{display:flex;flex-wrap:wrap;gap:3px;}
+.pip{display:inline-block;width:22px;height:22px;border-radius:5px;font-size:0.6rem;font-weight:700;text-align:center;line-height:22px;}
+.pip-done{background:var(--green-mid);color:white;}.pip-todo{background:var(--green-tint);color:var(--text-light);}
+.standings-tabs{display:flex;gap:6px;margin:12px 0 16px;flex-wrap:wrap;}
+.stab{background:var(--green-tint);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:0.8rem;color:var(--text-mid);cursor:pointer;font-family:"Source Sans 3",sans-serif;transition:all 0.15s;}
+.stab.active{background:var(--green);color:white;border-color:var(--green);}
+.lb-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:0 2px 8px var(--shadow);}
+.lb-card-leader{border-color:var(--gold);box-shadow:0 2px 12px rgba(184,148,63,0.25);}
+.lb-card-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.lb-rank{font-family:"Playfair Display",serif;font-size:1.3rem;font-weight:700;min-width:36px;}
+.lb-name{font-weight:700;color:var(--green-deep);font-size:1rem;flex:1;}
+.leader-badge{font-size:0.7rem;background:var(--gold);color:#fff;border-radius:10px;padding:2px 8px;margin-left:6px;vertical-align:middle;}
+.lb-card-stats{display:flex;gap:6px;flex-wrap:wrap;}
+.lb-stat{display:flex;flex-direction:column;align-items:center;background:var(--green-tint);border-radius:8px;padding:6px 12px;flex:1;min-width:60px;}
+.lb-stat-val{font-weight:700;font-size:0.95rem;color:var(--green-deep);}
+.lb-stat-lbl{font-size:0.65rem;color:var(--text-light);text-transform:uppercase;letter-spacing:0.5px;margin-top:1px;}
+.cp{font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:10px;}
+.cp-done{background:#e8f5e9;color:#2e7d32;}.cp-prog{background:var(--green-tint);color:var(--text-mid);}
+.archive-block{background:var(--white);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;}
+.arch-hd{padding:16px 18px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+.arch-hd h3{font-family:"Playfair Display",serif;font-size:1rem;color:var(--green-deep);}
+.arch-meta-row{display:flex;gap:10px;font-size:0.75rem;color:var(--text-mid);}
+.arch-toggle{background:none;border:1px solid var(--border);border-radius:6px;padding:3px 10px;font-size:0.72rem;cursor:pointer;color:var(--text-mid);}
+.archive-body{display:none;padding:0 18px 16px;border-top:1px solid var(--border);}
+.archive-body.open{display:block;}
+.arch-stats-row{display:flex;gap:8px;flex-wrap:wrap;padding:12px 0;}
+.arch-stat{flex:1;min-width:60px;text-align:center;}
+.av{font-family:"Playfair Display",serif;font-size:1.4rem;color:var(--green-deep);}
+.al{font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);}
+.activity-banner{display:flex;align-items:center;gap:10px;background:var(--green);color:white;padding:10px 14px;border-radius:10px;margin-bottom:14px;font-size:0.85rem;font-weight:600;}
+.activity-banner-dot{width:10px;height:10px;background:#e74c3c;border-radius:50%;flex-shrink:0;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.6;transform:scale(1.3)}}
+.activity-banner-dismiss{margin-left:auto;background:none;border:none;color:rgba(255,255,255,0.6);font-size:1rem;cursor:pointer;}
+.signin-prompt{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:40px;text-align:center;box-shadow:0 2px 8px var(--shadow);margin-bottom:28px;}
+.signin-prompt .sp-icon{font-size:3rem;margin-bottom:14px;}
+.signin-prompt h3{font-family:"Playfair Display",serif;font-size:1.3rem;color:var(--green-deep);margin-bottom:8px;}
+.signin-prompt p{font-size:0.88rem;color:var(--text-light);margin-bottom:22px;}
+.signin-prompt .sp-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.post-form-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:24px;box-shadow:0 2px 8px var(--shadow);}
+.post-form-card h2{font-family:"Playfair Display",serif;font-size:1.25rem;color:var(--green-deep);margin-bottom:6px;}
+.pfc-sub{font-size:0.82rem;color:var(--text-light);margin-bottom:20px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+.fg{display:flex;flex-direction:column;gap:5px;}.fg.full{grid-column:1/-1;}
+.f-lbl{font-size:0.75rem;font-weight:700;color:var(--text-mid);text-transform:uppercase;letter-spacing:0.5px;}
+.form-grid input,.form-grid select{border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:0.9rem;font-family:"Source Sans 3",sans-serif;color:var(--text);background:var(--white);width:100%;}
+.stype-row{display:flex;gap:8px;flex-wrap:wrap;}
+.stype{border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-size:0.82rem;font-weight:600;cursor:pointer;color:var(--text-mid);}
+.sel-b{border-color:#2e7d32!important;background:#f1f8e9!important;color:#2e7d32!important;}
+.sel-e{border-color:var(--eagle)!important;background:#e8f5e9!important;color:var(--eagle)!important;}
+.sel-a{border-color:var(--ace)!important;background:#fce4ec!important;color:var(--ace)!important;}
+.sel-al{border-color:#e65100!important;background:#fff3e0!important;color:#e65100!important;}
+.feed{display:flex;flex-direction:column;gap:10px;}
+.feed-item{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;box-shadow:0 1px 4px var(--shadow);}
+.fi-body{display:flex;flex-direction:column;gap:3px;flex:1;}
+.fi-player{font-weight:700;color:var(--green-deep);font-size:0.9rem;}
+.fi-detail{font-size:0.78rem;color:var(--text-mid);}
+.fi-witness{font-size:0.72rem;color:var(--text-light);}
+.fi-notes{font-size:0.72rem;color:var(--text-light);font-style:italic;}
+.feed-empty{text-align:center;padding:30px;color:var(--text-light);font-size:0.88rem;}
+.reaction-bar{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;}
+.reaction-btn{background:var(--green-tint);border:1px solid var(--border);border-radius:20px;padding:4px 10px;font-size:0.8rem;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all 0.15s;}
+.reaction-btn.reacted{background:var(--gold-pale);border-color:var(--gold);font-weight:700;}
+.reaction-count{font-size:0.72rem;color:var(--text-mid);font-weight:600;}
+.comment-count-btn{background:none;border:none;cursor:pointer;font-size:0.75rem;color:var(--text-mid);padding:0;display:flex;align-items:center;gap:4px;}
+.comment-item{padding:10px 0;border-bottom:1px solid var(--border);display:flex;gap:10px;}
+.comment-item:last-child{border-bottom:none;}
+.comment-avatar{width:28px;height:28px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.65rem;color:var(--gold-light);font-weight:700;flex-shrink:0;}
+.comment-body{flex:1;}
+.comment-author{font-weight:700;font-size:0.82rem;color:var(--green-deep);}
+.comment-text{font-size:0.85rem;color:var(--text);margin-top:2px;line-height:1.5;}
+.comment-time{font-size:0.7rem;color:var(--text-light);margin-top:3px;}
+.comment-empty{text-align:center;padding:20px;color:var(--text-light);font-size:0.85rem;}
+.admin-section{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px;}
+.admin-section h3{font-family:"Playfair Display",serif;font-size:1rem;color:var(--green-deep);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.mrow{background:var(--green-tint);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;}
+.mrow-top{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.mrow-name{font-weight:700;color:var(--green-deep);}
+.mrow-meta{font-size:0.75rem;color:var(--text-light);}
+.badge{font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:10px;}
+.badge-member{background:#e8f5e9;color:#2e7d32;}.badge-admin{background:#e3f2fd;color:#1565c0;}.badge-pending{background:#fff3e0;color:#e65100;}
+.approve-btn{background:var(--green-mid);color:white;border:none;border-radius:6px;padding:8px 16px;font-size:0.8rem;font-weight:700;cursor:pointer;}
+.reject-btn{background:#ffebee;color:#c62828;border:1px solid #ef9a9a;border-radius:6px;padding:8px 16px;font-size:0.8rem;font-weight:700;cursor:pointer;}
+.pending-notice{background:#fff3e0;border:1px solid #ffcc02;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:0.85rem;color:#e65100;}
+.admin-section input,.admin-section select{border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:0.85rem;width:100%;margin-bottom:10px;font-family:"Source Sans 3",sans-serif;}
+.reset-request-card{background:#fff8e1;border:1px solid #f0c040;border-radius:10px;padding:12px 14px;margin-bottom:10px;}
+.reset-request-name{font-weight:700;color:var(--green-deep);font-size:0.95rem;}
+.reset-request-meta{font-size:0.78rem;color:var(--text-mid);margin:3px 0 8px;}
+.reset-approve-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.reset-pin-input{border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:0.85rem;width:100px;}
+.faq-section{margin-bottom:24px;}
+.faq-category{font-family:"Playfair Display",serif;font-size:1rem;color:var(--green-deep);padding:10px 0 8px;border-bottom:2px solid var(--gold);margin-bottom:10px;font-weight:700;}
+.faq-item{background:var(--white);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden;}
+.faq-q{padding:14px 16px;cursor:pointer;font-weight:600;color:var(--green-deep);font-size:0.9rem;display:flex;justify-content:space-between;align-items:center;gap:10px;user-select:none;}
+.faq-q:hover{background:var(--green-tint);}
+.faq-arrow{color:var(--gold);font-size:0.75rem;transition:transform 0.2s;flex-shrink:0;}
+.faq-item.open .faq-arrow{transform:rotate(180deg);}
+.faq-a{display:none;padding:0 16px 14px;font-size:0.85rem;color:var(--text-mid);line-height:1.7;border-top:1px solid var(--border);}
+.faq-item.open .faq-a{display:block;}
+.faq-a ol,.faq-a ul{padding-left:20px;margin:6px 0;}
+.faq-a li{margin-bottom:4px;}
+.faq-a p{margin-bottom:6px;}
+.faq-a strong{color:var(--green-deep);}
+#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--green-deep);color:white;border:1px solid rgba(184,148,63,0.4);border-radius:12px;padding:12px 20px;box-shadow:0 8px 24px rgba(0,0,0,0.3);min-width:220px;max-width:340px;text-align:center;opacity:0;transition:all 0.3s;pointer-events:none;z-index:200;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+#toast-title{font-weight:700;font-size:0.9rem;color:var(--gold-light);margin-bottom:3px;}
+#toast-body{font-size:0.78rem;color:rgba(255,255,255,0.65);}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:500;align-items:center;justify-content:center;padding:20px;}
+.overlay.open{display:flex;}
+.modal{background:var(--white);border-radius:16px;padding:28px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;position:relative;}
+.modal-box{background:var(--white);border-radius:16px;padding:28px;width:100%;max-width:420px;position:relative;}
+.modal h2,.modal-title{font-family:"Playfair Display",serif;font-size:1.3rem;color:var(--green-deep);margin-bottom:10px;}
+.modal p{font-size:0.85rem;color:var(--text-mid);margin-bottom:16px;line-height:1.6;}
+.modal-close{position:absolute;top:14px;right:14px;background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text-light);}
+.modal-btns{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
+.a-lbl-modal{font-size:0.72rem;font-weight:700;color:var(--text-mid);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:5px;margin-top:13px;}
+.modal input,.modal select{border:1px solid var(--border);border-radius:6px;padding:10px 12px;font-size:0.9rem;width:100%;font-family:"Source Sans 3",sans-serif;margin-bottom:4px;}
+.err-hint{display:none;font-size:0.78rem;color:#c62828;margin-top:4px;}
+.btn-primary,.btn-gold{background:var(--green);color:white;border:none;border-radius:8px;padding:10px 22px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:"Source Sans 3",sans-serif;margin-top:8px;}
+.btn-gold{background:var(--gold);}
+.btn-outline{background:none;border:1px solid var(--border);border-radius:8px;padding:10px 22px;font-size:0.9rem;font-weight:600;cursor:pointer;color:var(--text-mid);font-family:"Source Sans 3",sans-serif;margin-top:8px;}
+.alert{font-size:0.82rem;margin-top:10px;padding:8px 12px;border-radius:6px;}
+.alert-ok{background:#e8f5e9;color:#2e7d32;display:none;}
+.alert-err{background:#ffebee;color:#c62828;display:none;}
+@media(max-width:600px){
+  .form-grid{grid-template-columns:1fr;}.fg.full{grid-column:1;}
+  .stat-card{min-width:80px;padding:10px 12px;}
+  .hole-grid{grid-template-columns:repeat(3,1fr);}
+  .header-inner{padding:6px 12px 0;}
+  .nb{padding:5px 9px;font-size:0.68rem;}
+}
+</style>
+</head>
+<body>
+
+<div id="toast"><div id="toast-title"></div><div id="toast-body"></div></div>
+
+<div class="gold-band"></div>
+<header>
+  <div class="header-inner">
+    <div class="header-top">
+      <div class="logo-block">
+        <div class="logo-emblem">
+          <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M28 2L4 12V30C4 42 14 51 28 54C42 51 52 42 52 30V12L28 2Z" fill="#1b3a28" stroke="#b8943f" stroke-width="1.5"/>
+            <path d="M28 7L8 15.5V30C8 40 16 48 28 50.5C40 48 48 40 48 30V15.5L28 7Z" fill="none" stroke="rgba(184,148,63,0.32)" stroke-width="0.8"/>
+            <line x1="28" y1="13" x2="28" y2="40" stroke="#b8943f" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M28 13L38 17.5L28 22Z" fill="#b8943f"/>
+            <path d="M18 37 Q23 32 28 34 Q33 36 38 33 Q41 37 38 39 Q33 41 28 40 Q23 41 18 39Z" fill="#2e7a4a" opacity="0.8"/>
+          </svg>
+        </div>
+        <div>
+          <div class="logo-name"><em>11.5</em> Emporium <span class="season-chip" id="season-chip"></span></div>
+          <div class="logo-tagline">Winners Only</div>
+          <div class="logo-club">Cobblestone Creek CC</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+          <span id="session-wrap"><button class="nb nb-signin" onclick="openLoginModal()">Sign In</button></span>
+          <button class="nb nb-admin" onclick="openAdminGate()">Admin ⚙</button>
+        </div>
+      </div>
+    </div>
+    <nav>
+      <button class="nb active" id="nb-board" onclick="showTab('board',this)">Birdie Board</button>
+      <button class="nb" id="nb-wof" onclick="showTab('wof',this)">Wall of Fame</button>
+      <button class="nb" id="nb-standings" onclick="showTab('standings',this)">Standings</button>
+      <button class="nb" id="nb-archive" onclick="showTab('archive',this)">Past Seasons</button>
+      <button class="nb" id="nb-activity" onclick="showTab('activity',this)">Activity <span id="activity-badge" class="act-badge" style="display:none"></span></button>
+      <button class="nb nb-post" id="nb-post" onclick="showTab('post',this)">🐦 Post Score</button>
+      <button class="nb" id="nb-faq" onclick="showTab('faq',this)">FAQ</button>
+      <button class="nb nb-qr" onclick="openQrModal()" title="QR Code">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;">
+          <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="5" y="5" width="3" height="3" fill="var(--green-deep)"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/><rect x="16" y="5" width="3" height="3" fill="var(--green-deep)"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="5" y="16" width="3" height="3" fill="var(--green-deep)"/>
+          <rect x="14" y="14" width="3" height="3" rx="0.5"/><rect x="19" y="14" width="3" height="3" rx="0.5"/>
+          <rect x="14" y="19" width="3" height="3" rx="0.5"/><rect x="19" y="19" width="3" height="3" rx="0.5"/>
+        </svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- BIRDIE BOARD -->
+<div id="tab-board" class="tab active">
+  <div class="page-title">Birdie Board</div>
+  <div class="page-sub">First member to post a birdie or better on each hole claims it for the season.</div>
+  <div class="stat-row" id="stat-row"></div>
+  <div class="legend">
+    <div class="lg-item"><div class="lg-dot lg-ace"></div>Hole-in-One</div>
+    <div class="lg-item"><div class="lg-dot" style="background:#e65100;"></div>Albatross</div>
+    <div class="lg-item"><div class="lg-dot lg-eagle"></div>Eagle</div>
+    <div class="lg-item"><div class="lg-dot lg-birdie"></div>Birdie</div>
+    <div class="lg-item"><div class="lg-dot lg-un"></div>Unclaimed</div>
+  </div>
+  <div class="sec-hd"><div class="sec-hd-title">18-Hole Scorecard</div><div class="sec-hd-line"></div><div class="sec-hd-note">Par 72 &middot; Cobblestone Creek CC</div></div>
+  <div class="hole-grid" id="hole-grid"></div>
+</div>
+
+<!-- WALL OF FAME -->
+<div id="tab-wof" class="tab">
+  <div class="page-title">Wall of Fame</div>
+  <div class="page-sub">Members who have birdied every hole at Cobblestone Creek in one season.</div>
+  <div class="wof-intro">
+    <div class="wof-intro-icon">🏆</div>
+    <div class="wof-intro-text">
+      <h3>The Complete the Card Challenge</h3>
+      <p>Post a <strong>birdie</strong> on all 18 holes in one season. Eagles and aces do not count &mdash; only birdies. Each score must be logged with a witness.</p>
+    </div>
+  </div>
+  <div class="sec-hd"><div class="sec-hd-title">Hall of Champions</div><div class="sec-hd-line"></div><div class="sec-hd-note" id="wof-season-note"></div></div>
+  <div class="wof-grid" id="wof-grid"></div>
+  <div style="margin-top:28px;">
+    <div class="sec-hd"><div class="sec-hd-title">Member Progress</div><div class="sec-hd-line"></div><div class="sec-hd-note">Holes birdied this season out of 18</div></div>
+    <div class="wof-progress-grid" id="wof-progress-grid"></div>
+  </div>
+</div>
+
+<!-- STANDINGS -->
+<div id="tab-standings" class="tab">
+  <div class="page-title">Season Standings</div>
+  <div class="page-sub">Two competitions running all season long.</div>
+  <div class="standings-tabs">
+    <button class="stab active" id="stab-race" onclick="showStandingsTab('race',this)">🐦 Birdie Race</button>
+    <button class="stab" id="stab-points" onclick="showStandingsTab('points',this)">🏅 Total Score</button>
+    <button class="stab" id="stab-feed" onclick="showStandingsTab('feed',this)">📋 Score Feed</button>
+  </div>
+  <div id="standings-panel-race"></div>
+  <div id="standings-panel-points" style="display:none;"></div>
+  <div id="standings-panel-feed" style="display:none;"></div>
+</div>
+
+<!-- PAST SEASONS -->
+<div id="tab-archive" class="tab">
+  <div class="page-title">Past Seasons</div>
+  <div class="page-sub">Full archive of every season.</div>
+  <div id="archive-list"></div>
+</div>
+
+<!-- ACTIVITY -->
+<div id="tab-activity" class="tab">
+  <div class="page-title">Activity</div>
+  <div class="page-sub">All scores posted this season.</div>
+  <div id="activity-banner" class="activity-banner" style="display:none;">
+    <span class="activity-banner-dot"></span>
+    <span id="activity-banner-text"></span>
+    <button class="activity-banner-dismiss" onclick="dismissActivityBanner()">✕</button>
+  </div>
+  <div id="activity-feed"></div>
+</div>
+
+<!-- POST SCORE -->
+<div id="tab-post" class="tab">
+  <div class="page-title">Post a Score</div>
+  <div class="page-sub">Log a birdie, eagle, albatross, or hole-in-one.</div>
+  <div id="post-signin-prompt" class="signin-prompt" style="display:none;">
+    <div class="sp-icon">🐦</div>
+    <h3>Sign in to post a score</h3>
+    <p>You need to be a registered member to post scores.</p>
+    <div class="sp-btns">
+      <button class="btn-gold" style="margin-top:0;" onclick="openLoginModal()">Sign In</button>
+      <button class="btn-outline" style="margin-top:0;" onclick="openRegModal()">Create Profile</button>
+    </div>
+  </div>
+  <div id="post-form-wrap" style="display:none;">
+    <div class="post-form-card">
+      <h2>Recording a Score</h2>
+      <p class="pfc-sub">Posting as <strong id="posting-as-name"></strong></p>
+      <div class="form-grid">
+        <div class="fg full">
+          <span class="f-lbl">Score Type</span>
+          <div class="stype-row">
+            <div class="stype sel-b" id="stype-birdie" onclick="selType('birdie',this)">🐦 Birdie</div>
+            <div class="stype" id="stype-eagle" onclick="selType('eagle',this)">🦅 Eagle</div>
+            <div class="stype" id="stype-albatross" onclick="selType('albatross',this)">🦉 Albatross</div>
+            <div class="stype" id="stype-ace" onclick="selType('ace',this)">🎯 Hole-in-One</div>
+          </div>
+        </div>
+        <div class="fg full"><span class="f-lbl">Hole Number</span><select id="post-hole" style="width:100%;"></select></div>
+        <div class="fg"><span class="f-lbl">Date Played</span><input type="date" id="post-date"></div>
+        <div class="fg full"><span class="f-lbl">Witness Name(s) &mdash; Required</span><input type="text" id="post-witness" placeholder="Playing partners who can confirm this score"></div>
+        <div class="fg full"><span class="f-lbl">Notes (optional)</span><input type="text" id="post-notes" placeholder="e.g. Knocked it to 3 feet from 150 yards"></div>
+      </div>
+      <button class="btn-gold" onclick="submitScore()">Submit Score &#9654;</button>
+      <div class="alert alert-ok" id="post-ok"></div>
+      <div class="alert alert-err" id="post-err"></div>
+    </div>
+  </div>
+  <div class="sec-hd"><div class="sec-hd-title">Recent Submissions</div><div class="sec-hd-line"></div></div>
+  <div class="feed" id="post-feed"></div>
+</div>
+
+<!-- ADMIN -->
+<div id="tab-admin" class="tab">
+  <div class="page-title">Admin Panel</div>
+  <div class="page-sub">Manage members, approve registrations, and reset the season.</div>
+  <div id="pending-section"></div>
+  <div id="pin-reset-section"></div>
+  <div class="admin-section">
+    <h3>Members</h3>
+    <div id="mlist"></div>
+  </div>
+  <div class="admin-section">
+    <h3>Add / Update Member</h3>
+    <span class="a-lbl-modal">Full Name</span><input type="text" id="a-name" placeholder="e.g. John Smith">
+    <span class="a-lbl-modal">4-Digit PIN</span><input type="password" id="a-pin" maxlength="4" placeholder="PIN">
+    <span class="a-lbl-modal">Role</span>
+    <select id="a-role"><option value="member">Member</option><option value="admin">Admin</option></select>
+    <button class="btn-primary" onclick="saveMember()">Save Member</button>
+    <div class="alert alert-ok" id="member-ok"></div>
+  </div>
+  <div class="admin-section">
+    <h3>Score Log</h3>
+    <div class="feed" id="admin-feed"></div>
+  </div>
+  <div class="admin-section">
+    <h3>Season Reset</h3>
+    <p style="font-size:0.85rem;color:var(--text-mid);margin-bottom:14px;">Archive the current season and start fresh.</p>
+    <button class="btn-outline" onclick="triggerReset()">Archive Season &amp; Start New Year</button>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div id="tab-faq" class="tab">
+  <div class="page-title">FAQ</div>
+  <div class="page-sub">Common questions about using the Birdie Board.</div>
+  <div class="faq-section">
+    <div class="faq-category">📲 Installing the App</div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How do I install on iPhone? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a"><ol><li>Open Safari and go to <strong>fairwayhq.github.io/CCCC--BB</strong></li><li>Tap the Share button (box with arrow)</li><li>Tap <strong>Add to Home Screen</strong> &rarr; <strong>Add</strong></li></ol></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How do I install on Android? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a"><ol><li>Open Chrome and go to <strong>fairwayhq.github.io/CCCC--BB</strong></li><li>Tap &#8942; &rarr; <strong>Add to Home Screen</strong> or <strong>Install App</strong></li><li>Tap <strong>Add</strong></li></ol></div>
+    </div>
+  </div>
+  <div class="faq-section">
+    <div class="faq-category">🔔 Notifications</div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How do I enable notifications on iPhone? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a"><p><strong>Important:</strong> On iPhone, push notifications only work if the app is installed to your home screen. iOS 16.4+ required.</p><ol><li>Install the app to your home screen first</li><li>Open the app from the home screen icon</li><li>When prompted, tap <strong>Allow</strong></li><li>If no prompt: go to <strong>Settings &rarr; Notifications &rarr; Birdie Board</strong></li></ol></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How do I enable notifications on Android? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a"><p><strong>In Chrome browser:</strong> When prompted tap <strong>Allow</strong>. If missed: tap lock icon &rarr; Notifications &rarr; Allow.</p><p><strong>Installed app:</strong> Open from home screen, tap Allow. If on Android 13+: go to <strong>Settings &rarr; Apps &rarr; Birdie Board &rarr; Notifications</strong>.</p><p><strong>Battery optimization:</strong> Go to Settings &rarr; Apps &rarr; Birdie Board &rarr; Battery &rarr; select Unrestricted.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What triggers a notification? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a"><ul><li>Someone posts a new score</li><li>Someone comments on a score</li><li>Someone reacts to a score</li><li>A member completes the card</li></ul></div>
+    </div>
+  </div>
+  <div class="faq-section">
+    <div class="faq-category">🔑 Account &amp; PIN</div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">I forgot my PIN &mdash; how do I reset it? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a"><ol><li>Tap <strong>Sign In</strong> in the top nav</li><li>Tap <strong>Forgot your PIN?</strong></li><li>Select your name and choose a new PIN</li><li>Tap <strong>Request PIN Reset</strong></li><li>Wait for admin approval</li></ol></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Will I stay signed in? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a"><p>Yes &mdash; the app remembers you automatically. You only need to sign in again if you tap Sign Out or clear your browser data.</p></div>
+    </div>
+  </div>
+  <div class="faq-section">
+    <div class="faq-category">⛳ Scoring</div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What are the point values? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a"><ul><li><strong>🐦 Birdie</strong> &mdash; 1pt (counts toward Birdie Race)</li><li><strong>🦅 Eagle</strong> &mdash; 3pts</li><li><strong>🦉 Albatross / Double Eagle</strong> &mdash; 4pts</li><li><strong>🎯 Hole-in-One</strong> &mdash; 5pts</li></ul></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What is the Birdie Race? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a"><p>The Birdie Race tracks who is first to birdie all 18 holes. Only <strong>birdies</strong> count &mdash; not eagles or aces. First to complete all 18 earns the Wall of Fame.</p></div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- MODALS -->
+<div class="overlay" id="login-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('login-modal')">✕</button>
+    <h2>Member Sign-In</h2>
+    <p>Select your name and enter your PIN. Not registered? <a href="#" onclick="closeModal('login-modal');openRegModal();" style="color:var(--green-mid);font-weight:600;">Create a profile &rarr;</a></p>
+    <span class="a-lbl-modal">Your Name</span>
+    <select id="login-sel"><option value="">Select your name...</option></select>
+    <span class="a-lbl-modal">4-Digit PIN</span>
+    <input type="password" id="login-pin" maxlength="4" placeholder="Enter your PIN" onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="err-hint" id="login-err">Incorrect name or PIN.</div>
+    <div style="text-align:right;margin-top:6px;"><a href="#" onclick="closeModal('login-modal');openPinResetModal();" style="font-size:0.8rem;color:var(--green-mid);">Forgot your PIN? &rarr;</a></div>
+    <div class="modal-btns">
+      <button class="btn-primary" style="margin-top:0;" onclick="doLogin()">Sign In</button>
+      <button class="btn-outline" style="margin-top:0;" onclick="closeModal('login-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="reg-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('reg-modal')">✕</button>
+    <h2>Create Member Profile</h2>
+    <p>An admin will review and approve your account.</p>
+    <span class="a-lbl-modal">Full Name</span>
+    <input type="text" id="reg-name" placeholder="e.g. John Smith">
+    <span class="a-lbl-modal">Choose a 4-Digit PIN</span>
+    <input type="password" id="reg-pin" maxlength="4" placeholder="You'll use this to sign in">
+    <div class="err-hint" id="reg-err">Please fill in all fields. PIN must be 4 digits.</div>
+    <div class="modal-btns">
+      <button class="btn-primary" style="margin-top:0;" onclick="doRegister()">Submit for Approval</button>
+      <button class="btn-outline" style="margin-top:0;" onclick="closeModal('reg-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="pin-reset-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('pin-reset-modal')">✕</button>
+    <h2>🔑 Forgot Your PIN?</h2>
+    <p>Select your name and choose a new PIN. The admin will approve it.</p>
+    <span class="a-lbl-modal">Your Name</span>
+    <select id="reset-name-sel"><option value="">Select your name...</option></select>
+    <span class="a-lbl-modal">New 4-Digit PIN</span>
+    <input type="password" id="reset-new-pin" maxlength="4" placeholder="Choose a new PIN">
+    <span class="a-lbl-modal">Confirm New PIN</span>
+    <input type="password" id="reset-confirm-pin" maxlength="4" placeholder="Re-enter your new PIN">
+    <div class="err-hint" id="reset-err"></div>
+    <div class="alert alert-ok" id="reset-ok"></div>
+    <div class="modal-btns">
+      <button class="btn-primary" style="margin-top:0;" onclick="submitPinReset()">Request PIN Reset</button>
+      <button class="btn-outline" style="margin-top:0;" onclick="closeModal('pin-reset-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="admin-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('admin-modal')">✕</button>
+    <h2>Admin Access</h2>
+    <p>Enter the admin password.</p>
+    <span class="a-lbl-modal">Admin Password</span>
+    <input type="password" id="admin-pw-input" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')checkAdminPw()">
+    <div class="err-hint" id="admin-err">Incorrect password.</div>
+    <div class="modal-btns">
+      <button class="btn-primary" style="margin-top:0;" onclick="checkAdminPw()">Enter</button>
+      <button class="btn-outline" style="margin-top:0;" onclick="closeModal('admin-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="comment-modal">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="closeModal('comment-modal')">✕</button>
+    <div id="comment-modal-header" style="margin-bottom:14px;"></div>
+    <div id="comment-list" style="max-height:300px;overflow-y:auto;margin-bottom:14px;"></div>
+    <div id="comment-signin-note" style="display:none;font-size:0.82rem;color:var(--text-light);text-align:center;padding:10px;">
+      <a href="#" onclick="closeModal('comment-modal');openLoginModal();" style="color:var(--green-mid);font-weight:600;">Sign in to comment &rarr;</a>
+    </div>
+    <div id="comment-input-wrap" style="display:none;">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
+        <button onclick="insertCommentEmoji('🔥')" style="background:var(--green-tint);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:1rem;cursor:pointer;">🔥</button>
+        <button onclick="insertCommentEmoji('👏')" style="background:var(--green-tint);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:1rem;cursor:pointer;">👏</button>
+        <button onclick="insertCommentEmoji('🐦')" style="background:var(--green-tint);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:1rem;cursor:pointer;">🐦</button>
+        <button onclick="insertCommentEmoji('💪')" style="background:var(--green-tint);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:1rem;cursor:pointer;">💪</button>
+        <button onclick="insertCommentEmoji('🏆')" style="background:var(--green-tint);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:1rem;cursor:pointer;">🏆</button>
+        <button onclick="insertCommentEmoji('🎯')" style="background:var(--green-tint);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:1rem;cursor:pointer;">🎯</button>
+        <button onclick="insertCommentEmoji('🦅')" style="background:var(--green-tint);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:1rem;cursor:pointer;">🦅</button>
+        <button onclick="insertCommentEmoji('⛳')" style="background:var(--green-tint);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:1rem;cursor:pointer;">⛳</button>
+        <button onclick="insertCommentEmoji('😂')" style="background:var(--green-tint);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:1rem;cursor:pointer;">😂</button>
+        <button onclick="insertCommentEmoji('😤')" style="background:var(--green-tint);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:1rem;cursor:pointer;">😤</button>
+      </div>
+      <div style="display:flex;gap:8px;align-items:flex-end;">
+        <input type="text" id="comment-input" placeholder="Add a comment..." style="flex:1;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:0.88rem;font-family:'Source Sans 3',sans-serif;" onkeydown="if(event.key==='Enter')submitComment()">
+        <button class="btn-primary" style="margin-top:0;padding:10px 16px;" onclick="submitComment()">Post</button>
+      </div>
+      <div class="alert alert-err" id="comment-err"></div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="qr-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('qr-modal')">✕</button>
+    <div class="modal-title" style="margin-bottom:4px;">📲 Join the Birdie Board</div>
+    <p style="font-size:0.85rem;color:var(--text-mid);margin-bottom:16px;">Scan to open &middot; Install from browser for full experience</p>
+    <div id="qr-container" style="display:flex;justify-content:center;margin-bottom:16px;"></div>
+    <div style="background:var(--green-tint);border-radius:10px;padding:10px 14px;font-size:0.8rem;color:var(--text-mid);">
+      <strong style="color:var(--green);">fairwayhq.github.io/CCCC--BB</strong>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== FIREBASE =====
+var fdb = null;
+function loadFirebase(cb){
+  var s1=document.createElement('script');
+  s1.src='https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js';
+  s1.onload=function(){
+    var s2=document.createElement('script');
+    s2.src='https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js';
+    s2.onload=function(){
+      var s3=document.createElement('script');
+      s3.src='https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js';
+      s3.onload=function(){ initApp(); cb(); };
+      s3.onerror=function(){ initApp(); cb(); };
+      document.head.appendChild(s3);
+      function initApp(){
+        firebase.initializeApp({
+          apiKey:"AIzaSyDzqvGD7wPkt5w7B4MgP_Ywb5MMQEwH8ig",
+          authDomain:"cobblestone-birdie-board-2c583.firebaseapp.com",
+          projectId:"cobblestone-birdie-board-2c583",
+          storageBucket:"cobblestone-birdie-board-2c583.firebasestorage.app",
+          messagingSenderId:"970129818057",
+          appId:"1:970129818057:web:e1210a77b72afb495a6818"
+        });
+        fdb=firebase.firestore();
+      }
+    };
+    s2.onerror=function(){ console.error('Firestore SDK failed'); };
+    document.head.appendChild(s2);
+  };
+  s1.onerror=function(){ console.error('Firebase SDK failed'); };
+  document.head.appendChild(s1);
+}
+
+// ===== CONSTANTS =====
+var HOLES=18;
+var PARS=[4,3,4,3,4,5,4,5,4,4,4,3,4,4,4,5,3,5];
+var ADMIN_PW='cccc115';
+var VAPID='BFie2MCUB1vRk5DNPsqKRdgXow4Jd_Iy78h0zvYRg0P09mS3WE1QPgg3aKppoOXhyvaTT9ItNSS4F0cpXf0SZKk';
+
+// ===== STATE =====
+var db={season:new Date().getFullYear(),members:[],scores:[],holes:[],archives:[],pinResets:[]};
+var session=null, selScoreType='birdie';
+var lastSeenTimestamp=parseInt(localStorage.getItem('cc_last_seen')||'0');
+
+function initHoles(){
+  db.holes=Array.from({length:HOLES},function(_,i){return{num:i+1,par:PARS[i],claimer:null,type:null,date:null};});
+}
+initHoles();
+
+// ===== FIRESTORE =====
+function initFirestore(){
+  setTimeout(function(){renderAll();},3000);
+
+  fdb.doc('app/season').onSnapshot(function(snap){
+    if(snap.exists){
+      db.season=snap.data().year||new Date().getFullYear();
+      var chip=document.getElementById('season-chip');
+      if(chip) chip.textContent='Season '+db.season;
+    }
+  },function(e){console.warn('season',e);});
+
+  fdb.collection('pinResets').onSnapshot(function(snap){
+    db.pinResets=snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});
+    if(document.getElementById('tab-admin')&&document.getElementById('tab-admin').classList.contains('active')) renderAdminPanel();
+  },function(e){console.warn('pinResets',e);});
+
+  fdb.collection('members').onSnapshot(function(snap){
+    db.members=snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});
+    renderAll();
+    if(document.getElementById('tab-admin')&&document.getElementById('tab-admin').classList.contains('active')) renderAdminPanel();
+    var saved=localStorage.getItem('cc_session');
+    if(saved){
+      try{
+        var s=JSON.parse(saved);
+        var m=db.members.find(function(x){return x.name===s.name&&String(x.pin)===String(s.pin)&&x.status==='approved';});
+        if(m&&!session){session=m;updateSessionUI();}
+        else if(!m){localStorage.removeItem('cc_session');}
+      }catch(e){localStorage.removeItem('cc_session');}
+    }
+  },function(e){console.warn('members',e);});
+
+  fdb.collection('scores').onSnapshot(function(snap){
+    db.scores=snap.docs.map(function(d){return Object.assign({id:d.id},d.data());})
+      .sort(function(a,b){return(b.timestamp||0)-(a.timestamp||0);});
+    var fresh=Array.from({length:HOLES},function(_,i){return{num:i+1,par:PARS[i],claimer:null,type:null,date:null};});
+    db.scores.slice().reverse().forEach(function(s){
+      var h=fresh[s.hole-1];
+      if(h&&!h.claimer){h.claimer=s.player;h.type=s.type;h.date=s.date;}
+    });
+    db.holes=fresh;
+    renderStats();renderHoleGrid();renderWoF();renderLeaderboard();
+    renderActivityFeed();updateActivityBadge();
+    if(document.getElementById('tab-post').classList.contains('active')) renderFeed('post-feed',20);
+    if(document.getElementById('tab-admin').classList.contains('active')) renderFeed('admin-feed',999);
+    populatePostForm();
+  },function(e){console.warn('scores',e);});
+
+  fdb.collection('archives').orderBy('season','desc').onSnapshot(function(snap){
+    db.archives=snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});
+    if(document.getElementById('tab-archive').classList.contains('active')) renderArchive();
+  },function(e){console.warn('archives',e);});
+
+  var notifInit=false;
+  fdb.collection('notifications').orderBy('timestamp','desc').limit(1).onSnapshot(function(snap){
+    if(!notifInit){notifInit=true;return;}
+    if(!snap.empty){
+      var data=snap.docs[0].data();
+      if(Date.now()-data.timestamp<10000) showToast(data.title,data.body);
+    }
+  },function(e){console.warn('notif',e);});
+
+  fdb.doc('app/season').get().then(function(snap){
+    if(!snap.exists) fdb.doc('app/season').set({year:new Date().getFullYear()});
+    checkAutoReset();
+  });
+}
+
+// ===== HELPERS =====
+function scoreLabel(t){return t==='ace'?'Hole-in-One':t==='eagle'?'Eagle':t==='albatross'?'Albatross':'Birdie';}
+function scoreIcon(t){return t==='ace'?'\uD83C\uDFAF':t==='eagle'?'\uD83E\uDD85':t==='albatross'?'\uD83E\uDD89':'\uD83D\uDC26';}
+function badgeEl(t){
+  var c=t==='ace'?'sb-ace':t==='eagle'?'sb-eagle':t==='albatross'?'sb-albatross':'sb-birdie';
+  return '<span class="score-badge '+c+'">'+scoreIcon(t)+' '+scoreLabel(t)+'</span>';
+}
+function hcls(t){return 'hc'+(t?' hc-'+t:'');}
+function fmtDate(d){
+  if(!d) return '';
+  var p=d.split('-');
+  if(p.length<3) return d;
+  var m=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return m[parseInt(p[1])-1]+' '+parseInt(p[2]);
+}
+function flash(el,msg){if(!el)return;el.textContent=msg;el.style.display='block';setTimeout(function(){el.style.display='none';},4000);}
+function countOf(name,type,sc){return(sc||db.scores).filter(function(s){return s.player===name&&s.type===type;}).length;}
+function holesBirdiedBy(name,sc){return new Set((sc||db.scores).filter(function(s){return s.player===name&&s.type==='birdie';}).map(function(s){return s.hole;}));}
+function hasCompletedCard(name,sc){return holesBirdiedBy(name,sc).size===HOLES;}
+function approvedMembers(){return db.members.filter(function(m){return m.status==='approved';});}
+function totalPoints(name,sc){
+  return(sc||db.scores).filter(function(s){return s.player===name;}).reduce(function(t,s){
+    return t+(s.type==='birdie'?1:s.type==='eagle'?3:s.type==='albatross'?4:5);
+  },0);
+}
+function escapeHtml(str){return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function formatAgo(ts){
+  var diff=Date.now()-ts,mins=Math.floor(diff/60000);
+  if(mins<1) return 'just now';
+  if(mins<60) return mins+'m ago';
+  var hrs=Math.floor(mins/60);
+  if(hrs<24) return hrs+'h ago';
+  return Math.floor(hrs/24)+'d ago';
+}
+function notifyAll(title,body,scoreId){
+  if(!fdb) return;
+  fdb.collection('notifications').add({title:title,body:body||'',scoreId:scoreId||'',timestamp:Date.now()});
+}
+function showToast(title,body){
+  document.getElementById('toast-title').textContent=title||'';
+  document.getElementById('toast-body').textContent=body||'';
+  var t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},5000);
+}
+
+// ===== TABS =====
+function showTab(id,btn){
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('active');});
+  var tabEl=document.getElementById('tab-'+id);
+  if(tabEl) tabEl.classList.add('active');
+  if(btn) btn.classList.add('active');
+  if(id==='archive') renderArchive();
+  if(id==='activity'){markActivitySeen();renderActivityFeed();}
+  if(id==='post') renderFeed('post-feed',20);
+  if(id==='admin') renderFeed('admin-feed',999);
+}
+
+// ===== RENDERS =====
+function renderAll(){renderStats();renderHoleGrid();renderWoF();renderLeaderboard();renderActivityFeed();updateActivityBadge();updateSessionUI();}
+
+function renderStats(){
+  var claimed=db.holes.filter(function(h){return h.claimer;}).length;
+  var birdies=db.scores.filter(function(s){return s.type==='birdie';}).length;
+  var eagles=db.scores.filter(function(s){return s.type==='eagle';}).length;
+  var aces=db.scores.filter(function(s){return s.type==='ace';}).length;
+  var alb=db.scores.filter(function(s){return s.type==='albatross';}).length;
+  var champs=approvedMembers().filter(function(m){return hasCompletedCard(m.name);}).length;
+  var el=document.getElementById('stat-row');
+  if(!el) return;
+  el.innerHTML=
+    '<div class="stat-card"><div class="sc-label">Holes Claimed</div><div class="sc-val">'+claimed+'<span style="font-size:1rem;color:var(--text-light)"> / 18</span></div><div class="sc-sub">'+(HOLES-claimed)+' available</div></div>'+
+    '<div class="stat-card"><div class="sc-label">Birdies Made</div><div class="sc-val">'+birdies+'</div></div>'+
+    '<div class="stat-card eagle-card"><div class="sc-label">Eagles Made</div><div class="sc-val eagle-val">'+eagles+'</div></div>'+
+    (alb>0?'<div class="stat-card" style="border-color:rgba(230,81,0,0.25)"><div class="sc-label">Albatrosses</div><div class="sc-val" style="color:#e65100;">'+alb+'</div></div>':'')+
+    '<div class="stat-card ace-card"><div class="sc-label">Holes-in-One</div><div class="sc-val ace-val">'+aces+'</div></div>'+
+    '<div class="stat-card"><div class="sc-label">Wall of Fame</div><div class="sc-val" style="color:var(--gold)">'+champs+'</div></div>';
+}
+
+function renderHoleGrid(){
+  var el=document.getElementById('hole-grid');
+  if(!el) return;
+  el.innerHTML=db.holes.map(function(h){
+    return '<div class="'+hcls(h.type)+'">'+
+      '<div class="hc-lbl">Hole</div><div class="hc-num">'+h.num+'</div><div class="hc-par">Par '+h.par+'</div>'+
+      (h.claimer
+        ?badgeEl(h.type)+'<div class="hc-claimer">'+h.claimer.split(' ').map(function(n,i){return i===0?n[0]+'.':n;}).join(' ')+'</div><div class="hc-date">'+fmtDate(h.date)+'</div>'
+        :'<span class="score-badge sb-un">Unclaimed</span>')+
+      '</div>';
+  }).join('');
+}
+
+function renderWoF(){
+  var champions=approvedMembers().filter(function(m){return hasCompletedCard(m.name);});
+  var noteEl=document.getElementById('wof-season-note');
+  if(noteEl) noteEl.textContent='Season '+db.season;
+  var gridEl=document.getElementById('wof-grid');
+  if(gridEl) gridEl.innerHTML=champions.length===0
+    ?'<div class="wof-empty-champ"><div class="wec-icon">🏆</div><p>No members have completed the card yet.</p></div>'
+    :champions.map(function(m){
+      return '<div class="wof-card"><div class="wof-trophy">🏆</div>'+
+        '<div class="wof-label">Wall of Fame &middot; Season '+db.season+'</div>'+
+        '<div class="wof-name">'+m.name+'</div>'+
+        '<div class="wof-detail">All 18 holes birdied &middot; Cobblestone Creek CC</div>'+
+        '<div class="wof-badge-row">'+
+          '<span class="wof-badge">🐦 '+countOf(m.name,'birdie')+' Birdies</span>'+
+          (countOf(m.name,'eagle')>0?'<span class="wof-badge">🦅 '+countOf(m.name,'eagle')+' Eagles</span>':'')+
+          (countOf(m.name,'ace')>0?'<span class="wof-badge">🎯 '+countOf(m.name,'ace')+' Aces</span>':'')+
+        '</div></div>';
+    }).join('');
+  var progEl=document.getElementById('wof-progress-grid');
+  if(progEl) progEl.innerHTML=approvedMembers().map(function(m){
+    var done=holesBirdiedBy(m.name);
+    return '<div class="wof-prog-card">'+
+      '<div class="wof-prog-top"><span class="wof-prog-name">'+m.name+'</span><span class="wof-prog-count">'+done.size+'/18</span></div>'+
+      '<div class="wof-prog-bar-bg"><div class="wof-prog-fill" style="width:'+Math.round(done.size/HOLES*100)+'%"></div></div>'+
+      '<div class="wof-prog-holes">'+Array.from({length:HOLES},function(_,i){
+        return '<span class="pip '+(done.has(i+1)?'pip-done':'pip-todo')+'">'+(i+1)+'</span>';
+      }).join('')+'</div></div>';
+  }).join('');
+}
+
+function renderLeaderboard(){
+  var members=approvedMembers();
+  if(members.length===0){
+    document.getElementById('standings-panel-race').innerHTML='<div class="feed-empty">No members yet.</div>';
+    document.getElementById('standings-panel-points').innerHTML='';
+    return;
+  }
+  var raceSort=members.slice().sort(function(a,b){
+    var diff=holesBirdiedBy(b.name).size-holesBirdiedBy(a.name).size;
+    return diff!==0?diff:countOf(b.name,'birdie')-countOf(a.name,'birdie');
+  });
+  document.getElementById('standings-panel-race').innerHTML=raceSort.map(function(p,i){
+    var done=holesBirdiedBy(p.name).size,complete=hasCompletedCard(p.name);
+    var medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
+    var rc=i===0?'var(--gold)':i===1?'#9e9e9e':i===2?'#b07040':'var(--text-light)';
+    return '<div class="lb-card">'+
+      '<div class="lb-card-top"><div class="lb-rank" style="color:'+rc+'">'+(medal||'#'+(i+1))+'</div>'+
+      '<div class="lb-name">'+p.name+'</div>'+
+      '<div class="lb-cp"><span class="cp '+(complete?'cp-done':'cp-prog')+'">'+(complete?'🏆 Complete':done+'/18')+'</span></div></div>'+
+      '<div class="lb-card-stats">'+
+        '<div class="lb-stat"><span class="lb-stat-val">🐦 '+countOf(p.name,'birdie')+'</span><span class="lb-stat-lbl">Birdies</span></div>'+
+        '<div class="lb-stat"><span class="lb-stat-val">'+done+'</span><span class="lb-stat-lbl">Holes Done</span></div>'+
+        '<div class="lb-stat"><span class="lb-stat-val">'+(HOLES-done)+'</span><span class="lb-stat-lbl">Remaining</span></div>'+
+      '</div></div>';
+  }).join('');
+  var ptSort=members.slice().sort(function(a,b){return totalPoints(b.name)-totalPoints(a.name);});
+  document.getElementById('standings-panel-points').innerHTML=ptSort.map(function(p,i){
+    var pts=totalPoints(p.name),isLeader=i===0&&pts>0;
+    var medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
+    var rc=i===0?'var(--gold)':i===1?'#9e9e9e':i===2?'#b07040':'var(--text-light)';
+    return '<div class="lb-card '+(isLeader?'lb-card-leader':'')+'">'+
+      '<div class="lb-card-top"><div class="lb-rank" style="color:'+rc+'">'+(medal||'#'+(i+1))+'</div>'+
+      '<div class="lb-name">'+p.name+(isLeader?' <span class="leader-badge">🏆 Leader</span>':'')+'</div>'+
+      '<div class="lb-cp" style="font-weight:700;color:var(--gold)">'+pts+'pt'+(pts!==1?'s':'')+'</div></div>'+
+      '<div class="lb-card-stats">'+
+        '<div class="lb-stat"><span class="lb-stat-val">🐦 '+countOf(p.name,'birdie')+'</span><span class="lb-stat-lbl">Birdies</span></div>'+
+        '<div class="lb-stat"><span class="lb-stat-val" style="color:var(--eagle)">🦅 '+countOf(p.name,'eagle')+'</span><span class="lb-stat-lbl">Eagles</span></div>'+
+        '<div class="lb-stat"><span class="lb-stat-val" style="color:#e65100">🦉 '+countOf(p.name,'albatross')+'</span><span class="lb-stat-lbl">Albatross</span></div>'+
+        '<div class="lb-stat"><span class="lb-stat-val" style="color:var(--ace)">🎯 '+countOf(p.name,'ace')+'</span><span class="lb-stat-lbl">Aces</span></div>'+
+      '</div></div>';
+  }).join('');
+}
+
+function renderArchive(){
+  var el=document.getElementById('archive-list');
+  if(!el) return;
+  if(db.archives.length===0){el.innerHTML='<div class="feed-empty">No past seasons yet.</div>';return;}
+  el.innerHTML=db.archives.map(function(a,ai){
+    var scoresList=(a.scores||[]).length===0?'<div class="feed-empty">No scores this season.</div>'
+      :a.scores.slice().reverse().map(function(s){
+        return '<div class="feed-item"><div class="fi-body"><span class="fi-player">'+s.player+'</span>'+
+          '<span class="fi-detail">Hole '+s.hole+' &middot; '+scoreLabel(s.type)+' &middot; '+fmtDate(s.date)+'</span></div>'+badgeEl(s.type)+'</div>';
+      }).join('');
+    return '<div class="archive-block">'+
+      '<div class="arch-hd" onclick="toggleArch('+ai+')"><h3>Season '+a.season+'</h3>'+
+      '<div style="display:flex;align-items:center;gap:16px;">'+
+        '<div class="arch-meta-row"><span>B:'+a.stats.birdies+'</span><span>E:'+a.stats.eagles+'</span></div>'+
+        '<button class="arch-toggle">View</button></div></div>'+
+      '<div class="archive-body" id="arch-'+ai+'">'+
+        '<div class="arch-stats-row">'+
+          '<div class="arch-stat"><div class="av">'+a.stats.birdies+'</div><div class="al">Birdies</div></div>'+
+          '<div class="arch-stat"><div class="av" style="color:var(--eagle)">'+a.stats.eagles+'</div><div class="al">Eagles</div></div>'+
+          '<div class="arch-stat"><div class="av" style="color:var(--ace)">'+a.stats.aces+'</div><div class="al">Aces</div></div>'+
+          '<div class="arch-stat"><div class="av">'+a.stats.claimed+'</div><div class="al">Claimed</div></div>'+
+          '<div class="arch-stat"><div class="av" style="color:var(--gold)">'+a.champions.length+'</div><div class="al">Champs</div></div>'+
+        '</div>'+scoresList+
+        '<div style="font-size:0.7rem;color:var(--text-light);margin-top:12px;">Archived '+a.archivedOn+'</div>'+
+      '</div></div>';
+  }).join('');
+}
+function toggleArch(i){document.getElementById('arch-'+i).classList.toggle('open');}
+
+function renderFeed(elId,limit){
+  var isAdmin=elId==='admin-feed';
+  var isActivity=elId==='activity-feed';
+  var list=db.scores.slice(0,limit||999);
+  var el=document.getElementById(elId);
+  if(!el) return;
+  if(list.length===0){el.innerHTML='<div class="feed-empty">No scores posted yet.</div>';return;}
+  el.innerHTML=list.map(function(s){
+    var canDelete=isAdmin||(session&&session.name===s.player);
+    var reactions=s.reactions||{};
+    return '<div class="feed-item" style="flex-direction:column;align-items:stretch;" id="fi-'+s.id+'">'+
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">'+
+        '<div class="fi-body">'+
+          '<span class="fi-player">'+s.player+'</span>'+
+          '<span class="fi-detail">Hole '+s.hole+' (Par '+PARS[s.hole-1]+') &middot; '+scoreLabel(s.type)+' &middot; '+fmtDate(s.date)+'</span>'+
+          (s.witness?'<span class="fi-witness">Witnessed by '+s.witness+'</span>':'')+
+          (!isActivity&&s.notes?'<span class="fi-notes">&ldquo;'+s.notes+'&rdquo;</span>':'')+
+        '</div>'+
+        '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;">'+
+          badgeEl(s.type)+
+          (canDelete?'<button class="reject-btn" style="font-size:0.7rem;padding:4px 10px;margin-left:0;" data-id="'+s.id+'" data-player="'+s.player+'" data-hole="'+s.hole+'" onclick="deleteScore(this.dataset.id,this.dataset.player,this.dataset.hole)">🗑 Delete</button>':'')+
+        '</div>'+
+      '</div>'+
+      '<div class="reaction-bar">'+
+        [['🔥','fire'],['👏','clap'],['🐦','birdie'],['💪','strong']].map(function(r){
+          var count=reactions[r[1]]||0,reacted=session&&(s.userReactions||{})[session.name+'_'+r[1]];
+          return '<button class="reaction-btn'+(reacted?' reacted':'')+'" data-sid="'+s.id+'" data-key="'+r[1]+'" onclick="toggleReaction(this.dataset.sid,this.dataset.key)">'+r[0]+(count>0?' <span class="reaction-count">'+count+'</span>':'')+' </button>';
+        }).join('')+
+      '</div>'+
+      (isActivity?'<div id="inline-comments-'+s.id+'" style="margin-top:6px;"></div>':'')+
+      '<div style="margin-top:6px;">'+commentCountHtml(s)+'</div>'+
+    '</div>';
+  }).join('');
+  // Load inline comments for activity feed
+  if(isActivity) list.forEach(function(s){ loadInlineComments(s.id); });
+}
+
+function loadInlineComments(scoreId){
+  var el=document.getElementById('inline-comments-'+scoreId);
+  if(!el||!fdb) return;
+  fdb.collection('scores').doc(scoreId).collection('comments')
+    .orderBy('timestamp','desc').limit(3).get()
+    .then(function(snap){
+      if(snap.empty){el.innerHTML='';return;}
+      var comments=snap.docs.slice().reverse();
+      el.innerHTML='<div style="border-top:1px solid var(--border);padding-top:8px;margin-top:2px;">'+
+        comments.map(function(d){
+          var c=d.data();
+          var initials=c.author.split(' ').map(function(n){return n[0];}).join('').substring(0,2).toUpperCase();
+          return '<div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px;">'+
+            '<div style="width:22px;height:22px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.55rem;color:var(--gold-light);font-weight:700;flex-shrink:0;">'+initials+'</div>'+
+            '<div style="flex:1;">'+
+              '<span style="font-weight:700;font-size:0.78rem;color:var(--green-deep);">'+c.author+'</span>'+
+              '<span style="font-size:0.78rem;color:var(--text);margin-left:6px;">'+escapeHtml(c.text)+'</span>'+
+              '<div style="font-size:0.65rem;color:var(--text-light);margin-top:1px;">'+formatAgo(c.timestamp)+'</div>'+
+            '</div></div>';
+        }).join('')+
+      '</div>';
+    }).catch(function(){el.innerHTML='';});
+}
+
+function renderActivityFeed(){renderFeed('activity-feed',999);}
+
+function renderStandingsFeed(){
+  var el=document.getElementById('standings-panel-feed');
+  if(!el) return;
+  if(db.scores.length===0){el.innerHTML='<div class="feed-empty">No scores yet.</div>';return;}
+  el.innerHTML=db.scores.map(function(s){
+    return '<div class="feed-item"><div class="fi-body">'+
+      '<span class="fi-player">'+s.player+'</span>'+
+      '<span class="fi-detail">Hole '+s.hole+' (Par '+PARS[s.hole-1]+') &middot; '+scoreLabel(s.type)+' &middot; '+fmtDate(s.date)+'</span>'+
+      (s.witness?'<span class="fi-witness">Witnessed by '+s.witness+'</span>':'')+
+    '</div>'+badgeEl(s.type)+'</div>';
+  }).join('');
+}
+
+function showStandingsTab(tab,btn){
+  ['race','points','feed'].forEach(function(t){document.getElementById('standings-panel-'+t).style.display=t===tab?'block':'none';});
+  document.querySelectorAll('.stab').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  if(tab==='feed') renderStandingsFeed();
+}
+
+// ===== ACTIVITY =====
+function updateActivityBadge(){
+  var unseen=db.scores.filter(function(s){return(s.timestamp||0)>lastSeenTimestamp;}).length;
+  var badge=document.getElementById('activity-badge');
+  if(badge){
+    if(unseen>0){badge.textContent=unseen;badge.style.display='inline-block';}
+    else{badge.style.display='none';}
+  }
+  if(unseen>0){
+    var banner=document.getElementById('activity-banner'),bannerText=document.getElementById('activity-banner-text');
+    if(banner&&!banner.dataset.dismissed){
+      bannerText.textContent=unseen+' new score'+(unseen>1?'s':'')+' since your last visit';
+      banner.style.display='flex';
+    }
+  }
+}
+function dismissActivityBanner(){
+  var banner=document.getElementById('activity-banner');
+  if(banner){banner.style.display='none';banner.dataset.dismissed='1';}
+}
+function markActivitySeen(){
+  var now=Date.now();
+  localStorage.setItem('cc_last_seen',now);
+  lastSeenTimestamp=now;
+  var badge=document.getElementById('activity-badge');
+  if(badge) badge.style.display='none';
+  dismissActivityBanner();
+}
+
+// ===== ADMIN =====
+function renderAdminPanel(){
+  var pending=db.members.filter(function(m){return m.status==='pending';});
+  document.getElementById('pending-section').innerHTML=pending.length>0
+    ?'<div class="pending-notice">⏳ <strong>'+pending.length+' member'+(pending.length>1?'s':'')+' awaiting approval</strong></div>':'';
+  var resets=(db.pinResets||[]).filter(function(r){return r.status==='pending';});
+  if(resets.length>0){
+    var pinHtml='<div class="admin-section"><h3>🔑 PIN Reset Requests</h3>';
+    resets.forEach(function(r){
+      pinHtml+='<div class="reset-request-card"><div class="reset-request-name">'+r.memberName+'</div>';
+      pinHtml+='<div class="reset-request-meta">Requested a new PIN</div>';
+      pinHtml+='<div class="reset-approve-row"><span style="font-size:0.8rem;color:var(--text-mid);">Set PIN:</span>';
+      pinHtml+='<input class="reset-pin-input" id="temp-pin-'+r.id+'" type="password" maxlength="4" value="'+r.newPin+'">';
+      pinHtml+='<button class="approve-btn" data-rid="'+r.id+'" data-rmid="'+r.memberId+'" data-rpin="'+r.newPin+'" onclick="approvePinReset(this)">Approve</button>';
+      pinHtml+='<button class="reject-btn" data-rid="'+r.id+'" onclick="declinePinReset(this)" style="margin-left:0;">Decline</button>';
+      pinHtml+='</div></div>';
+    });
+    pinHtml+='</div>';
+    document.getElementById('pin-reset-section').innerHTML=pinHtml;
+  } else {
+    document.getElementById('pin-reset-section').innerHTML='';
+  }
+  var mHtml='';
+  db.members.forEach(function(m){
+    var bc=m.status==='pending'?'badge-pending':m.role==='admin'?'badge-admin':'badge-member';
+    var bt=m.status==='pending'?'Pending':m.role==='admin'?'Admin':'Member';
+    mHtml+='<div class="mrow"><div class="mrow-top"><span class="mrow-name">'+m.name+'</span><span class="badge '+bc+'">'+bt+'</span></div>';
+    mHtml+='<div class="mrow-meta">PIN set ✓</div>';
+    mHtml+='<div style="margin-top:7px;display:flex;gap:6px;flex-wrap:wrap;">';
+    if(m.status==='pending') mHtml+='<button class="approve-btn" data-id="'+m.id+'" onclick="approveMember(this.dataset.id)">✓ Approve</button>';
+    mHtml+='<button class="reject-btn" style="margin-left:0;" data-id="'+m.id+'" data-name="'+m.name+'" onclick="deleteMember(this.dataset.id,this.dataset.name)">🗑 Delete</button>';
+    mHtml+='</div></div>';
+  });
+  document.getElementById('mlist').innerHTML=mHtml;
+  renderFeed('admin-feed',999);
+}
+function approveMember(id){fdb.collection('members').doc(id).update({status:'approved'});}
+function deleteMember(id,name){if(confirm('Delete '+name+'?')) fdb.collection('members').doc(id).delete();}
+function approvePinReset(btn){
+  var inp=document.getElementById('temp-pin-'+btn.dataset.rid);
+  var pin=inp?inp.value.trim():btn.dataset.rpin;
+  if(!pin||pin.length!==4){alert('Please enter a valid 4-digit PIN.');return;}
+  fdb.collection('members').doc(btn.dataset.rmid).update({pin:pin})
+    .then(function(){return fdb.collection('pinResets').doc(btn.dataset.rid).update({status:'approved'});})
+    .then(function(){alert('PIN updated.');}).catch(function(){alert('Error updating PIN.');});
+}
+function declinePinReset(btn){
+  if(confirm('Decline this PIN reset request?')) fdb.collection('pinResets').doc(btn.dataset.rid).update({status:'declined'});
+}
+function saveMember(){
+  var name=document.getElementById('a-name').value.trim();
+  var pin=document.getElementById('a-pin').value.trim();
+  var role=document.getElementById('a-role').value;
+  if(!name||!pin){alert('Name and PIN are required.');return;}
+  var existing=db.members.find(function(m){return m.name.toLowerCase()===name.toLowerCase();});
+  if(existing&&existing.id){
+    fdb.collection('members').doc(existing.id).update({name:name,pin:pin,role:role,status:'approved'});
+  } else {
+    fdb.collection('members').add({name:name,pin:pin,role:role,status:'approved'});
+  }
+  document.getElementById('a-name').value='';document.getElementById('a-pin').value='';
+  flash(document.getElementById('member-ok'),'Member saved.');
+}
+
+// ===== SEASON RESET =====
+function checkAutoReset(){
+  if(db.season<new Date().getFullYear()) triggerAutoReset(new Date().getFullYear());
+}
+function triggerAutoReset(newYear){
+  fdb.collection('archives').add({
+    season:db.season,archivedOn:new Date().toISOString().split('T')[0],trigger:'Auto',
+    stats:{birdies:db.scores.filter(function(s){return s.type==='birdie';}).length,
+      eagles:db.scores.filter(function(s){return s.type==='eagle';}).length,
+      aces:db.scores.filter(function(s){return s.type==='ace';}).length,
+      albatross:db.scores.filter(function(s){return s.type==='albatross';}).length,
+      claimed:db.holes.filter(function(h){return h.claimer;}).length},
+    scores:db.scores,
+    champions:approvedMembers().filter(function(m){return hasCompletedCard(m.name);}).map(function(m){return m.name;})
+  }).then(function(){return fdb.collection('scores').get();})
+  .then(function(snap){var b=fdb.batch();snap.docs.forEach(function(d){b.delete(d.ref);});return b.commit();})
+  .then(function(){return fdb.doc('app/season').set({year:newYear});});
+}
+function triggerReset(){
+  if(prompt('Type RESET to archive and start fresh:')!=='RESET') return;
+  triggerAutoReset(new Date().getFullYear());
+}
+
+// ===== SESSION =====
+function updateSessionUI(){
+  var sw=document.getElementById('session-wrap');
+  var pf=document.getElementById('post-form-wrap');
+  var pp=document.getElementById('post-signin-prompt');
+  if(session){
+    document.getElementById('posting-as-name').textContent=session.name;
+    if(sw) sw.innerHTML='<div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;"><span style="color:rgba(255,255,255,0.6);font-size:0.68rem;font-weight:600;white-space:nowrap;max-width:110px;overflow:hidden;text-overflow:ellipsis;">'+session.name+'</span><button class="nb" onclick="logout()" style="font-size:0.65rem;padding:3px 8px;color:rgba(255,255,255,0.45);">Sign Out</button></div>';
+    if(pf) pf.style.display='block';
+    if(pp) pp.style.display='none';
+  } else {
+    if(sw) sw.innerHTML='<button class="nb nb-signin" onclick="openLoginModal()">Sign In</button>';
+    if(pf) pf.style.display='none';
+    if(pp) pp.style.display='block';
+  }
+  populatePostForm();
+}
+function logout(){session=null;localStorage.removeItem('cc_session');updateSessionUI();showTab('board',document.getElementById('nb-board'));}
+
+// ===== AUTH =====
+function openLoginModal(){
+  var sel=document.getElementById('login-sel');
+  sel.innerHTML='<option value="">Select your name...</option>'+
+    db.members.filter(function(m){return m.status==='approved';}).map(function(m){return '<option value="'+m.name+'">'+m.name+'</option>';}).join('');
+  document.getElementById('login-pin').value='';
+  document.getElementById('login-err').style.display='none';
+  openModal('login-modal');
+}
+function doLogin(){
+  var name=document.getElementById('login-sel').value;
+  var pin=document.getElementById('login-pin').value.trim();
+  var m=db.members.find(function(x){return x.name===name&&String(x.pin)===String(pin)&&x.status==='approved';});
+  if(!m){document.getElementById('login-err').style.display='block';return;}
+  session=m;
+  localStorage.setItem('cc_session',JSON.stringify({name:m.name,pin:m.pin}));
+  closeModal('login-modal');updateSessionUI();
+  showTab('post',document.getElementById('nb-post'));
+  subscribeToNotifications();
+}
+function doRegister(){
+  var name=document.getElementById('reg-name').value.trim();
+  var pin=document.getElementById('reg-pin').value.trim();
+  var errEl=document.getElementById('reg-err');
+  if(!name||!pin||pin.length!==4||!/^\d{4}$/.test(pin)){errEl.style.display='block';return;}
+  if(db.members.find(function(m){return m.name.toLowerCase()===name.toLowerCase();})){
+    errEl.style.display='block';errEl.textContent='That name is already registered.';return;
+  }
+  fdb.collection('members').add({name:name,pin:pin,role:'member',status:'pending'})
+    .then(function(){closeModal('reg-modal');alert('Profile submitted! Admin will approve shortly.');})
+    .catch(function(){errEl.style.display='block';errEl.textContent='Error. Please try again.';});
+}
+function openPinResetModal(){
+  document.getElementById('reset-name-sel').innerHTML='<option value="">Select your name...</option>'+
+    db.members.filter(function(m){return m.status==='approved';}).map(function(m){return '<option value="'+m.id+'">'+m.name+'</option>';}).join('');
+  document.getElementById('reset-new-pin').value='';
+  document.getElementById('reset-confirm-pin').value='';
+  document.getElementById('reset-err').style.display='none';
+  document.getElementById('reset-ok').textContent='';
+  openModal('pin-reset-modal');
+}
+function submitPinReset(){
+  var memberId=document.getElementById('reset-name-sel').value;
+  var newPin=document.getElementById('reset-new-pin').value.trim();
+  var confirmPin=document.getElementById('reset-confirm-pin').value.trim();
+  var errEl=document.getElementById('reset-err'),okEl=document.getElementById('reset-ok');
+  errEl.style.display='none';
+  if(!memberId||!newPin||!confirmPin){errEl.style.display='block';errEl.textContent='Please fill in all fields.';return;}
+  if(newPin.length!==4||!/^\d{4}$/.test(newPin)){errEl.style.display='block';errEl.textContent='PIN must be 4 digits.';return;}
+  if(newPin!==confirmPin){errEl.style.display='block';errEl.textContent='PINs do not match.';return;}
+  var member=db.members.find(function(m){return m.id===memberId;});
+  fdb.collection('pinResets').add({memberId:memberId,memberName:member.name,newPin:newPin,requestedAt:Date.now(),status:'pending'})
+    .then(function(){okEl.textContent='Reset request submitted!';okEl.style.display='block';})
+    .catch(function(){errEl.style.display='block';errEl.textContent='Error. Please try again.';});
+}
+function openAdminGate(){
+  document.getElementById('admin-pw-input').value='';
+  document.getElementById('admin-err').style.display='none';
+  openModal('admin-modal');
+}
+function checkAdminPw(){
+  if(document.getElementById('admin-pw-input').value===ADMIN_PW){
+    closeModal('admin-modal');showTab('admin',null);renderAdminPanel();
+  } else {
+    document.getElementById('admin-err').style.display='block';
+  }
+}
+
+// ===== POST SCORE =====
+function populatePostForm(){
+  var holeEl=document.getElementById('post-hole');
+  if(!holeEl) return;
+  holeEl.innerHTML=db.holes.map(function(h){
+    var myScores=session?db.scores.filter(function(s){return s.player===session.name&&s.hole===h.num;}):[];
+    var myTypes=myScores.map(function(s){return s.type;});
+    var taken=myTypes.indexOf(selScoreType)!==-1;
+    var posted=myTypes.length>0?'Done: '+myTypes.map(scoreLabel).join(', '):'Available';
+    return '<option value="'+h.num+'"'+(taken?' disabled':'')+'>'+(taken?'[Taken] ':'')+'Hole '+h.num+' (Par '+h.par+') - '+posted+(taken?' ['+scoreLabel(selScoreType)+' taken]':'')+'</option>';
+  }).join('');
+  var dateEl=document.getElementById('post-date');
+  if(dateEl&&!dateEl.value) dateEl.value=new Date().toISOString().split('T')[0];
+}
+function selType(type,el){
+  selScoreType=type;
+  document.querySelectorAll('.stype').forEach(function(s){s.className='stype';});
+  if(type==='birdie') el.className='stype sel-b';
+  else if(type==='eagle') el.className='stype sel-e';
+  else if(type==='albatross') el.className='stype sel-al';
+  else el.className='stype sel-a';
+  populatePostForm();
+}
+function submitScore(){
+  var hole=document.getElementById('post-hole').value;
+  var date=document.getElementById('post-date').value;
+  var witness=document.getElementById('post-witness').value.trim();
+  var notes=document.getElementById('post-notes').value.trim();
+  var errEl=document.getElementById('post-err'),okEl=document.getElementById('post-ok');
+  if(!session){flash(errEl,'You must be signed in.');return;}
+  if(!hole||!date){flash(errEl,'Please select a hole and date.');return;}
+  if(!witness){flash(errEl,'A witness name is required.');return;}
+  if(db.scores.find(function(s){return s.player===session.name&&s.hole===parseInt(hole)&&s.type===selScoreType;})){
+    flash(errEl,'You already posted a '+scoreLabel(selScoreType)+' on Hole '+hole+' this season.');return;
+  }
+  fdb.collection('scores').add({
+    player:session.name,type:selScoreType,hole:parseInt(hole),date:date,witness:witness,notes:notes,timestamp:Date.now()
+  }).then(function(docRef){
+    var complete=hasCompletedCard(session.name);
+    flash(okEl,scoreIcon(selScoreType)+' '+scoreLabel(selScoreType)+' on Hole '+hole+' recorded!'+(complete?' CARD COMPLETE!':''));
+    document.getElementById('post-witness').value='';
+    document.getElementById('post-notes').value='';
+    notifyAll(scoreIcon(selScoreType)+' '+session.name+' posted a '+scoreLabel(selScoreType)+'!',
+      'Hole '+hole+' (Par '+PARS[parseInt(hole)-1]+') \xb7 '+fmtDate(date)+(complete?' 🏆 CARD COMPLETE!':''), docRef.id);
+  }).catch(function(){flash(errEl,'Error saving score. Please try again.');});
+}
+function deleteScore(id,player,hole){
+  if(!confirm('Delete this '+player+' score on Hole '+hole+'?')) return;
+  fdb.collection('scores').doc(id).delete().catch(function(){alert('Error deleting score.');});
+}
+function toggleReaction(scoreId,key){
+  if(!session){alert('Please sign in to react.');return;}
+  var score=db.scores.find(function(s){return s.id===scoreId;});
+  if(!score) return;
+  var userKey=session.name+'_'+key;
+  var hasReacted=(score.userReactions||{})[userKey];
+  var newCount=Math.max(0,((score.reactions||{})[key]||0)+(hasReacted?-1:1));
+  var update={};
+  update['reactions.'+key]=newCount;
+  update['userReactions.'+userKey]=!hasReacted;
+  fdb.collection('scores').doc(scoreId).update(update).then(function(){
+    if(!hasReacted) notifyAll(key==='fire'?'\uD83D\uDD25':key==='clap'?'\uD83D\uDC4F':key==='birdie'?'\uD83D\uDC26':'\uD83D\uDCAA',session.name+' reacted to '+score.player+"'s score");
+  }).catch(function(){});
+}
+
+// ===== COMMENTS =====
+var currentCommentScoreId=null;
+function openComments(scoreId){
+  currentCommentScoreId=scoreId;
+  var score=db.scores.find(function(s){return s.id===scoreId;});
+  if(!score) return;
+  document.getElementById('comment-modal-header').innerHTML=
+    '<div style="font-weight:700;color:var(--green-deep);font-size:0.95rem;">'+score.player+'</div>'+
+    '<div style="font-size:0.78rem;color:var(--text-mid);">'+scoreLabel(score.type)+' &middot; Hole '+score.hole+' &middot; '+fmtDate(score.date)+'</div>';
+  if(session){
+    document.getElementById('comment-input-wrap').style.display='block';
+    document.getElementById('comment-signin-note').style.display='none';
+    document.getElementById('comment-input').value='';
+  } else {
+    document.getElementById('comment-input-wrap').style.display='none';
+    document.getElementById('comment-signin-note').style.display='block';
+  }
+  renderCommentList(scoreId);
+  openModal('comment-modal');
+}
+function renderCommentList(scoreId){
+  var listEl=document.getElementById('comment-list');
+  listEl.innerHTML='<div class="comment-empty">Loading...</div>';
+  fdb.collection('scores').doc(scoreId).collection('comments').orderBy('timestamp','asc').get()
+    .then(function(snap){
+      if(snap.empty){listEl.innerHTML='<div class="comment-empty">No comments yet. Be the first!</div>';return;}
+      listEl.innerHTML=snap.docs.map(function(d){
+        var c=d.data();
+        var initials=c.author.split(' ').map(function(n){return n[0];}).join('').substring(0,2).toUpperCase();
+        return '<div class="comment-item"><div class="comment-avatar">'+initials+'</div>'+
+          '<div class="comment-body"><div class="comment-author">'+c.author+'</div>'+
+          '<div class="comment-text">'+escapeHtml(c.text)+'</div>'+
+          '<div class="comment-time">'+formatAgo(c.timestamp)+'</div></div></div>';
+      }).join('');
+      listEl.scrollTop=listEl.scrollHeight;
+    }).catch(function(){listEl.innerHTML='<div class="comment-empty">Could not load comments.</div>';});
+}
+function insertCommentEmoji(emoji){
+  var input=document.getElementById('comment-input');
+  if(!input) return;
+  var start=input.selectionStart, end=input.selectionEnd;
+  var val=input.value;
+  input.value=val.substring(0,start)+emoji+val.substring(end);
+  input.selectionStart=input.selectionEnd=start+emoji.length;
+  input.focus();
+}
+function submitComment(){
+  if(!session) return;
+  var input=document.getElementById('comment-input');
+  var text=input.value.trim();
+  var errEl=document.getElementById('comment-err');
+  if(!text){flash(errEl,'Please enter a comment.');return;}
+  var score=db.scores.find(function(s){return s.id===currentCommentScoreId;});
+  fdb.collection('scores').doc(currentCommentScoreId).collection('comments')
+    .add({author:session.name,text:text,timestamp:Date.now()})
+    .then(function(){
+      input.value='';renderCommentList(currentCommentScoreId);
+      fdb.collection('scores').doc(currentCommentScoreId).update({commentCount:((score.commentCount||0)+1)});
+      if(score&&score.player!==session.name)
+        notifyAll('\uD83D\uDCAC '+session.name+' commented','"'+text.substring(0,60)+(text.length>60?'...':'')+'"');
+    }).catch(function(){flash(errEl,'Error posting comment.');});
+}
+function commentCountHtml(score){
+  var count=score.commentCount||0;
+  return '<button class="comment-count-btn" data-sid="'+score.id+'" onclick="openComments(this.dataset.sid)">\uD83D\uDCAC '+(count>0?count+' comment'+(count>1?'s':''):'Comment')+'</button>';
+}
+
+// ===== MODALS =====
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function openRegModal(){document.getElementById('reg-name').value='';document.getElementById('reg-pin').value='';document.getElementById('reg-err').style.display='none';openModal('reg-modal');}
+function openQrModal(){
+  openModal('qr-modal');
+  var container=document.getElementById('qr-container');
+  if(container&&!container.dataset.rendered){
+    var script=document.createElement('script');
+    script.src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+    script.onload=function(){
+      container.dataset.rendered='1';
+      new QRCode(container,{text:'https://fairwayhq.github.io/CCCC--BB',width:200,height:200,colorDark:'#1b3a28',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});
+    };
+    document.head.appendChild(script);
+  }
+}
+
+// ===== FAQ =====
+function toggleFaq(el){el.parentNode.classList.toggle('open');}
+
+// ===== PUSH NOTIFICATIONS =====
+function subscribeToNotifications(){
+  if(!('Notification' in window)||!('serviceWorker' in navigator)) return;
+  Notification.requestPermission().then(function(permission){
+    if(permission!=='granted') return;
+    navigator.serviceWorker.ready.then(function(reg){
+      setTimeout(function(){
+        try {
+          if(typeof firebase==='undefined'||!firebase.messaging) return;
+          firebase.messaging().getToken({vapidKey:VAPID,serviceWorkerRegistration:reg})
+            .then(function(token){
+              if(token) fdb.collection('fcmTokens').doc(token.substring(0,28)).set({
+                token:token,member:session?session.name:'unknown',timestamp:Date.now()
+              });
+            }).catch(function(e){console.warn('FCM token error:',e);});
+        } catch(e){console.warn('FCM error:',e);}
+      },3000);
+    });
+  });
+}
+
+// ===== INIT =====
+renderAll();
+loadFirebase(function(){
+  initFirestore();
+  // Deep link: open comment thread if ?score= param present
+  var params=new URLSearchParams(window.location.search);
+  var scoreParam=params.get('score');
+  if(scoreParam){
+    // Wait for scores to load then open comments
+    var attempts=0;
+    var checkScore=setInterval(function(){
+      var s=db.scores.find(function(x){return x.id===scoreParam;});
+      if(s||(attempts++)>20){
+        clearInterval(checkScore);
+        if(s){showTab('activity',document.getElementById('nb-activity'));openComments(scoreParam);}
+      }
+    },500);
+  }
+});
+
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js').catch(function(){});
+}
+</script>
+</body>
+</html>
